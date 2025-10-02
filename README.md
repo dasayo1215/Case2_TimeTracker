@@ -29,6 +29,23 @@ make setup
 ※もしmakeがない環境なら sh setup.sh で代用可能です。
 ※MySQLは、OSによって起動しない場合があるのでそれぞれのPCに合わせてdocker-compose.ymlファイルを編集してください。
 
+## データベース初期化とシーディング
+初回セットアップ時に `make setup` または `sh setup.sh` を実行すると、自動的にマイグレーションとシーディングが実行されます。
+これにより以下のダミーデータが投入されます：
+
+- 管理者ユーザー
+  - Email: `admin@example.com`
+  - Password: `admin1234`
+- 一般ユーザー 5 名
+- 各ユーザーに 10 日分の勤怠データ
+- 各勤怠に 1〜3 件の休憩データ
+
+開発中にデータベースをリセットしたい場合は以下を実行してください：
+
+```bash
+php artisan migrate:fresh --seed
+```
+
 ## URL
 - 開発環境 (React SPA)：http://localhost:5173/
 ※フロントエンド (Vite Dev Server) のエントリーポイントです。
@@ -44,46 +61,5 @@ make setup
 ## その他
 
 ## ER図
-以下は **Case2_TimeTracker** のテーブル構成を示したER図です。
-
-```mermaid
-erDiagram
-    USERS ||--o{ ATTENDANCES : has
-    ATTENDANCES ||--o{ BREAKS : has
-
-    USERS {
-        bigint id PK
-        varchar name
-        varchar email UNIQUE
-        varchar password
-        enum role
-        timestamp email_verified_at
-        timestamp created_at
-        timestamp updated_at
-    },
-
-    ATTENDANCES {
-        bigint id PK
-        bigint user_id FK
-        date work_date
-        datetime clock_in
-        datetime clock_out
-        varchar remarks
-        enum status
-        datetime submitted_at
-        datetime approved_at
-        timestamp created_at
-        timestamp updated_at
-    },
-
-    BREAKS {
-        bigint id PK
-        bigint attendance_id FK
-        datetime break_start
-        datetime break_end
-        timestamp created_at
-        timestamp updated_at
-    }
-```
 
 ## 画面例
