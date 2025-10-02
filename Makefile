@@ -1,5 +1,8 @@
 PID_FILE := .npm_dev.pid
 
+setup:
+	sh setup.sh
+
 start: stop
 	@echo "Starting backend containers (docker-compose up -d)..."
 	docker-compose up -d
