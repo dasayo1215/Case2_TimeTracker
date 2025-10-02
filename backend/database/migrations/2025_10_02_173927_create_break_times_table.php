@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('breaktimes', function (Blueprint $table) {
+        Schema::create('break_times', function (Blueprint $table) {
             $table->id();
             $table->foreignId('attendance_id')->constrained('attendances')->cascadeOnDelete();
             $table->dateTime('break_start');

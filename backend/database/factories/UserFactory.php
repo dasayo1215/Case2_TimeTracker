@@ -15,7 +15,6 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => bcrypt('password'), // デフォルトのパスワード
             'role' => $this->faker->randomElement(['admin', 'user']),
-            'remember_token' => Str::random(10),
         ];
     }
 }
