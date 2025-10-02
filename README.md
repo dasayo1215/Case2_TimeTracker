@@ -53,10 +53,10 @@ erDiagram
 
     USERS {
         bigint id PK
-        varchar(255) name
-        varchar(255) email UNIQUE
-        varchar(255) password
-        enum role("admin","user")
+        varchar name
+        varchar email UNIQUE
+        varchar password
+        enum role
         timestamp email_verified_at
         timestamp created_at
         timestamp updated_at
@@ -68,8 +68,8 @@ erDiagram
         date work_date
         datetime clock_in
         datetime clock_out
-        varchar(255) remarks
-        enum status("draft","pending","approved")
+        varchar remarks
+        enum status
         datetime submitted_at
         datetime approved_at
         timestamp created_at
