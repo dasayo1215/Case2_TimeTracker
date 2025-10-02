@@ -21,13 +21,13 @@ class DevSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // 一般ユーザーを5人作成
-        User::factory(1000)->create()->each(function ($user) {
-            // 各ユーザーに 10 日分の勤怠を作成
+        // 一般ユーザー数を .env から取得
+        $userCount = env('SEED_USER_COUNT', 10);
+
+        User::factory($userCount)->create()->each(function ($user) {
             Attendance::factory(10)->create([
                 'user_id' => $user->id,
             ])->each(function ($attendance) {
-                // 勤怠ごとに 1〜3 個の休憩をランダムで作成
                 $breakCount = rand(1, 3);
                 BreakTime::factory($breakCount)->create([
                     'attendance_id' => $attendance->id,
