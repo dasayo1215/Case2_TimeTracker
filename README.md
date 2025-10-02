@@ -60,7 +60,7 @@ erDiagram
         timestamp email_verified_at
         timestamp created_at
         timestamp updated_at
-    }
+    } 
 
     ATTENDANCES {
         bigint id PK
@@ -74,7 +74,7 @@ erDiagram
         datetime approved_at
         timestamp created_at
         timestamp updated_at
-    }
+    } 
 
     BREAKS {
         bigint id PK
