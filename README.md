@@ -36,7 +36,7 @@ make setup
 - 管理者ユーザー
   - Email: `admin@example.com`
   - Password: `admin1234`
-- 一般ユーザー 5 名
+- 一般ユーザー 1000 名
 - 各ユーザーに 10 日分の勤怠データ
 - 各勤怠に 1〜3 件の休憩データ
 

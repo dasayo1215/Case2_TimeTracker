@@ -22,7 +22,7 @@ class DevSeeder extends Seeder
         ]);
 
         // 一般ユーザーを5人作成
-        User::factory(5)->create()->each(function ($user) {
+        User::factory(1000)->create()->each(function ($user) {
             // 各ユーザーに 10 日分の勤怠を作成
             Attendance::factory(10)->create([
                 'user_id' => $user->id,
