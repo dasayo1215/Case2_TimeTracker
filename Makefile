@@ -6,8 +6,10 @@ setup:
 start: stop
 	@echo "Starting backend containers (docker-compose up -d)..."
 	docker-compose up -d
-	@echo "Starting frontend (npm run dev)..."
-	cd frontend && npm run dev & echo $$! > $(PID_FILE)
+	@echo "Killing any process on port 5173..."
+	@lsof -t -i:5173 | xargs -r kill -9 || true
+	@echo "Starting frontend (npm run dev on port 5173)..."
+	cd frontend && npm run dev -- --port 5173 & echo $$! > $(PID_FILE)
 	@echo "npm run dev started with PID $$(cat $(PID_FILE))"
 
 stop:

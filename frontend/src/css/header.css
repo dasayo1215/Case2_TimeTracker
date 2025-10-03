@@ -1,0 +1,78 @@
+.header {
+    width: 100%;
+    height: 50px;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.header-wrapper {
+    width: 100%;
+    max-width: 1540px;
+    /* min-width: 1400px;   開発中これより小さい画面で見るのでコメントアウト */
+    height: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+}
+
+.header-logo-img {
+    display: block;
+    height: 30px;
+    padding-left: 10px;
+}
+
+@media screen and (max-width: 999px) {
+    .header-logo-img {
+        height: 23px;
+    }
+}
+
+.header-nav {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-nav-link {
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+}
+
+.header-nav-link:hover {
+    text-decoration: underline;
+}

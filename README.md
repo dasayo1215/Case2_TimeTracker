@@ -47,6 +47,8 @@ php artisan migrate:fresh --seed
 ## URL
 - 開発環境 (React SPA)：http://localhost:5173/
 ※フロントエンド (Vite Dev Server) のエントリーポイントです。
+!!!!これって毎回変わるん??????
+
 - API (Laravel)：http://localhost/api/
 ※バックエンドのAPIエンドポイントです。/api/items などにアクセスできます。
 - phpMyAdmin：http://localhost:8080/

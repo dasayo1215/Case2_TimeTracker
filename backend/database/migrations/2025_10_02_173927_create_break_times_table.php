@@ -10,14 +10,14 @@ return new class extends Migration {
         Schema::create('break_times', function (Blueprint $table) {
             $table->id();
             $table->foreignId('attendance_id')->constrained('attendances')->cascadeOnDelete();
-            $table->dateTime('break_start');
-            $table->dateTime('break_end')->nullable();
+            $table->time('break_start');
+            $table->time('break_end')->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('breaktimes');
+        Schema::dropIfExists('break_times');
     }
 };

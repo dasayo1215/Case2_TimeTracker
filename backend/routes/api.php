@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ItemController;
-
-Route::get('/items', [ItemController::class, 'index']);
-Route::get('/items/{id}', [ItemController::class, 'show']);
+// このアプリは Fortify + セッション認証を利用しているため
+// APIルート（stateless）は利用していません。
+// 認証系ルートは routes/web.php にまとめています。

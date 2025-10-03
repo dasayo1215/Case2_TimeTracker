@@ -9,13 +9,10 @@ class BreakTimeFactory extends Factory
 {
     public function definition(): array
     {
-        $start = $this->faker->dateTimeBetween('12:00', '13:00');
-        $end = (clone $start)->modify('+1 hour');
-
         return [
             'attendance_id' => Attendance::factory(),
-            'break_start' => $start,
-            'break_end' => $end,
+            'break_start' => now(),
+            'break_end'   => now()->addHour(),
         ];
     }
 }
