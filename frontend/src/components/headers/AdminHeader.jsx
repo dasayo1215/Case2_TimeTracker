@@ -39,7 +39,9 @@ export default function AdminHeader() {
 						</Link>
 					</li>
 					<li className="header-nav-item">
-						<button className="header-nav-link" onClick={handleLogout}>
+						<button
+							className="header-nav-link header-nav-button"
+							onClick={handleLogout}>
 							ログアウト
 						</button>
 					</li>

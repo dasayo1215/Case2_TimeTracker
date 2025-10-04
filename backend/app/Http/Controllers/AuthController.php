@@ -30,11 +30,36 @@ class AuthController extends Controller
     {
         $credentials = $request->validated();
 
+        // URLによって admin / user を判定
+        $isAdminLogin = $request->is('api/admin/login');
+
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            // 管理者ログイン時：role=admin のみ許可
+            if ($isAdminLogin && $user->role !== 'admin') {
+                Auth::logout();
+                return response()->json([
+                    'errors' => [
+                        'email' => ['ログイン情報が登録されていません']
+                    ]
+                ], 422);
+            }
+
+            // 一般ログイン時：role=user のみ許可
+            if (!$isAdminLogin && $user->role !== 'user') {
+                Auth::logout();
+                return response()->json([
+                    'errors' => [
+                        'email' => ['ログイン情報が登録されていません']
+                    ]
+                ], 422);
+            }
+
             $request->session()->regenerate();
 
             return response()->json([
-                'user' => Auth::user(),
+                'user' => $user,
             ]);
         }
 
@@ -44,6 +69,7 @@ class AuthController extends Controller
             ]
         ], 422);
     }
+
 
     // ログアウト
     public function logout()

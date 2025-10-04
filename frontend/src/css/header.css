@@ -76,3 +76,16 @@
 .header-nav-link:hover {
     text-decoration: underline;
 }
+
+.header-nav-button {
+    background-color: transparent; /* 背景を透明に */
+    color: white; /* 文字色を白に */
+    border: none; /* ボーダーを削除 */
+    font-size: 14px; /* フォントサイズ */
+    padding: 0; /* パディングを調整 */
+    cursor: pointer; /* カーソルをポインターに */
+}
+
+.header-nav-button:hover {
+    text-decoration: underline; /* ホバー時に下線 */
+}
