@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\BreakTime;
 
 class Attendance extends Model
 {
@@ -34,7 +35,7 @@ class Attendance extends Model
     /**
      * リレーション: Attendance は複数の BreakTime を持つ
      */
-    public function breaks()
+    public function breakTimes()
     {
         return $this->hasMany(BreakTime::class);
     }

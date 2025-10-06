@@ -1,0 +1,84 @@
+.attendance-page {
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* 状態ラベル（勤務外・出勤中など） */
+.attendance-status {
+    display: inline-block;
+    background-color: #e0e0e0;
+    color: #555;
+    font-size: 14px;
+    border-radius: 999px;
+    padding: 5px 15px;
+    margin-bottom: 0px;
+}
+
+/* 日付 */
+.attendance-date {
+    font-size: 25px;
+    margin-bottom: 0px;
+}
+
+/* 現在時刻 */
+.attendance-time {
+    font-size: 50px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+/* ボタンのラッパー */
+.attendance-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.attendance-btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 50px; /* ← ボタンの間にスペースを追加！ */
+}
+
+/* 出勤・退勤・休憩ボタン */
+.attendance-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+    color: #fff;
+    font-weight: bold;
+    height: 50px;
+    width: 130px;
+    border: none;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.attendance-btn:hover {
+    background-color: #585858;
+}
+
+/* サブボタン（休憩入など） */
+.attendance-btn.secondary {
+    background-color: #fff;
+    color: #000;
+}
+
+.attendance-btn.secondary:hover {
+    background-color: #eee;
+}
+
+/* 退勤済みメッセージ */
+.attendance-message {
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+}

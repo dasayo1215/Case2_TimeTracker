@@ -27,7 +27,7 @@ export default function LoginForm({ isAdmin = false }) {
 			setUser(res.data.user);
 
 			// 4. 成功時リダイレクト先を分岐
-			navigate(isAdmin ? '/admin/attendance/list' : '/attendance/list');
+			navigate(isAdmin ? '/admin/attendance/list' : '/attendance');
 		} catch (err) {
 			if (err.response?.status === 422) {
 				setErrors(err.response.data.errors || {});

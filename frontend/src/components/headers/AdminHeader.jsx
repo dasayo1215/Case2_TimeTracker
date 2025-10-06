@@ -1,13 +1,16 @@
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import logo from '/logo.svg';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function AdminHeader() {
 	const navigate = useNavigate();
+	const { setUser } = useAuth();
 
 	const handleLogout = async () => {
 		try {
 			await axios.post('/api/logout');
+			setUser(null);
 			// ログアウトしたらログイン画面へ遷移
 			navigate('/admin/login');
 		} catch (err) {

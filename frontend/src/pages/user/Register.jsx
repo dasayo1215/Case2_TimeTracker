@@ -32,8 +32,8 @@ export default function Register() {
 			// 3. ユーザー情報を Context に保存
 			setUser(res.data.user);
 
-			// 4. 成功時は勤怠一覧画面へ遷移
-			navigate('/attendance/list');
+			// 4. 成功時は勤怠登録画面へ遷移
+			navigate('/attendance');
 		} catch (err) {
 			if (err.response?.status === 422) {
 				setErrors(err.response.data.errors || {});
