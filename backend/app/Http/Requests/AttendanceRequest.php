@@ -13,7 +13,7 @@ class AttendanceRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        $rules = [
             'date' => ['required', 'date'],
             'clock_in' => ['required', 'date_format:H:i:s'],
             'clock_out' => ['required', 'date_format:H:i:s'],
@@ -21,6 +21,13 @@ class AttendanceRequest extends FormRequest
             'breakTimes.*.break_end'   => ['nullable', 'date_format:H:i:s'],
             'remarks' => ['required', 'string'],
         ];
+
+        // 管理者ルート（/api/admin/...）の場合のみ user_id を必須にする
+        if ($this->is('api/admin/*')) {
+            $rules['user_id'] = ['required', 'integer', 'exists:users,id'];
+        }
+
+        return $rules;
     }
 
     public function messages(): array

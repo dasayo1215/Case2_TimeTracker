@@ -15,11 +15,11 @@ import UserLogin from './pages/user/Login';
 import AttendanceForm from './pages/user/AttendanceForm';
 import AttendanceList from './pages/user/AttendanceList';
 import AttendanceDetail from './pages/user/AttendanceDetail';
-// import RequestList from './pages/user/RequestList';
+import RequestList from './pages/user/RequestList';
 
 import AdminLogin from './pages/admin/Login';
-// import AdminAttendanceList from './pages/admin/AttendanceList';
-// import AdminAttendanceDetail from './pages/admin/AttendanceDetail';
+import AdminAttendanceList from './pages/admin/AttendanceList';
+import AdminAttendanceDetail from './pages/admin/AttendanceDetail';
 // import StaffList from './pages/admin/StaffList';
 // import StaffAttendanceList from './pages/admin/StaffAttendanceList';
 // import AdminRequestList from './pages/admin/RequestList';
@@ -107,7 +107,14 @@ function Layout() {
 						</ProtectedRoute>
 					}
 				/>
-				{/* <Route path="/stamp_correction_request/list" element={<RequestList />} /> */}
+				<Route
+					path="/stamp_correction_request/list"
+					element={
+						<ProtectedRoute allowedRoles={['user']}>
+							<RequestList />
+						</ProtectedRoute>
+					}
+				/>
 
 				{/* -------------------------- */}
 				{/* 管理者（ゲスト可） */}
@@ -124,15 +131,22 @@ function Layout() {
 				{/* -------------------------- */}
 				{/* 管理者専用（要ログイン） */}
 				{/* -------------------------- */}
-				{/* <Route
+				<Route
 					path="/admin/attendance/list"
 					element={
 						<ProtectedRoute allowedRoles={['admin']}>
 							<AdminAttendanceList />
 						</ProtectedRoute>
 					}
-				/> */}
-				{/* <Route path="/admin/attendance/:id" element={<AdminAttendanceDetail />} /> */}
+				/>
+				<Route
+					path="/admin/attendance/:id"
+					element={
+						<ProtectedRoute allowedRoles={['admin']}>
+							<AdminAttendanceDetail />
+						</ProtectedRoute>
+					}
+				/>
 				{/* <Route path="/admin/staff/list" element={<StaffList />} /> */}
 				{/* <Route path="/admin/attendance/staff/:id" element={<StaffAttendanceList />} /> */}
 				{/* <Route path="/admin/stamp_correction_request/list" element={<AdminRequestList />} /> */}

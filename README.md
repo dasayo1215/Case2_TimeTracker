@@ -58,6 +58,7 @@ php artisan migrate:fresh --seed
 
 ## その他
 - 現状、休憩は0回でもOKの仕様。
+- 現状、管理者が勤怠を修正した場合は申請承認を介さず即時確定処理として扱い、status は approved、approved_at に現在日時を登録します。
 
 ## ER図
 

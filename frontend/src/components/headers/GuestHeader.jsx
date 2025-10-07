@@ -6,9 +6,7 @@ export default function GuestHeader() {
 		<header className="header">
 			<div className="header-wrapper">
 				<h1 className="sr-only">Case2_TimeTracker</h1>
-				<Link className="header-logo" to="/">
-					<img className="header-logo-img" src={logo} alt="ロゴ" />
-				</Link>
+				<img className="header-logo-img" src={logo} alt="ロゴ" />
 			</div>
 		</header>
 	);

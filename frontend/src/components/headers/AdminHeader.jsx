@@ -9,7 +9,7 @@ export default function AdminHeader() {
 
 	const handleLogout = async () => {
 		try {
-			await axios.post('/api/logout');
+			await axios.post('/api/admin/logout');
 			setUser(null);
 			// ログアウトしたらログイン画面へ遷移
 			navigate('/admin/login');
@@ -22,29 +22,28 @@ export default function AdminHeader() {
 		<header className="header">
 			<div className="header-wrapper">
 				<h1 className="sr-only">Case2_TimeTracker</h1>
-				<Link className="header-logo" to="/">
-					<img className="header-logo-img" src={logo} alt="ロゴ" />
-				</Link>
+				<img className="header-logo-img" src={logo} alt="ロゴ" />
 				<ul className="header-nav">
 					<li className="header-nav-item">
-						<Link className="header-nav-link" to="/admin/attendances">
+						<Link className="header-nav-link" to="/admin/attendance/list">
 							勤怠一覧
 						</Link>
 					</li>
 					<li className="header-nav-item">
-						<Link className="header-nav-link" to="/admin/staffs">
+						<Link className="header-nav-link" to="/admin/staff/list">
 							スタッフ一覧
 						</Link>
 					</li>
 					<li className="header-nav-item">
-						<Link className="header-nav-link" to="/admin/requests">
+						<Link className="header-nav-link" to="/stamp_correction_request/list">
 							申請一覧
 						</Link>
 					</li>
 					<li className="header-nav-item">
 						<button
 							className="header-nav-link header-nav-button"
-							onClick={handleLogout}>
+							onClick={handleLogout}
+						>
 							ログアウト
 						</button>
 					</li>

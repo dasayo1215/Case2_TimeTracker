@@ -22,9 +22,7 @@ export default function UserHeader() {
 		<header className="header">
 			<div className="header-wrapper">
 				<h1 className="sr-only">Case2_TimeTracker</h1>
-				<Link className="header-logo" to="/">
-					<img className="header-logo-img" src={logo} alt="ロゴ" />
-				</Link>
+				<img className="header-logo-img" src={logo} alt="ロゴ" />
 				<ul className="header-nav">
 					<li className="header-nav-item">
 						<Link className="header-nav-link" to="/attendance">

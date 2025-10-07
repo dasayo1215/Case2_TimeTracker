@@ -1,10 +1,10 @@
-.attendance-list {
+.list-page {
 	background: #f5f5f5;
 	min-height: 100vh;
 	padding-top: 50px;
 }
 
-.attendance-container {
+.list-container {
 	text-align: center;
     width: 80%;
 	max-width: 800px;
@@ -12,16 +12,16 @@
 	padding-bottom: 80px;
 }
 
-.attendance-header {
+.list-header {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	margin-bottom: 30px;
-    margin-top: 50px
+    margin-top: 50px;
 }
 
 /* タイトル */
-.attendance-title {
+.list-title {
 	font-size: 20px;
 	margin-bottom: 30px;
     margin-top: 0;
@@ -34,7 +34,7 @@
 }
 
 /* 月ナビ全体ボックス */
-.attendance-nav-box {
+.list-nav-box {
 	width: 100%;
 	max-width: 800px;
 	display: flex;
@@ -47,19 +47,19 @@
 }
 
 /* カレンダー部分 */
-.nav-center {
+.list-nav-center {
 	display: flex;
 	align-items: center;
 	gap: 6px;
 	cursor: pointer;
 }
 
-.nav-calendar-icon {
+.list-nav-calendar-icon {
 	font-size: 18px;
 	color: #333;
 }
 
-.nav-month-input {
+.list-nav-input {
 	border: none;
 	background: transparent;
 	font-weight: bold;
@@ -68,12 +68,12 @@
 	outline: none;
 	padding: 0;
 	text-align: center;
-	width: 80px;
+	width: 100px;
 	cursor: pointer;
 }
 
 /* ボタン */
-.nav-btn.gray {
+.list-nav-btn.gray {
 	background: transparent;
 	border: none;
 	color: #555;
@@ -82,13 +82,13 @@
 	padding: 6px 10px;
 	transition: 0.2s;
 }
-.nav-btn.gray:hover {
+.list-nav-btn.gray:hover {
 	color: #000;
 	transform: scale(1.05);
 }
 
 /* 勤怠テーブル */
-.attendance-table {
+.list-table {
 	width: 100%;
 	max-width: 800px;
 	margin: 0 auto;
@@ -101,38 +101,38 @@
 	overflow: hidden;
 }
 
-.attendance-row {
+.list-row {
 	border-top: 3px solid #f5f5f5;
 	border-bottom: 3px solid #f5f5f5;
 }
 
-.attendance-row-head {
+.list-row-head {
 	border-bottom: 5px solid #f5f5f5;
 }
 
-.attendance-cell {
+.list-cell {
 	padding: 8px;
 	text-align: center;
 }
 
-.attendance-row:last-child {
+.list-row:last-child {
 	border-bottom: none;
 }
 
 /* 「詳細」リンク */
-.attendance-detail-link {
+.list-detail-link {
 	color: #000;
 	text-decoration: none;
 	cursor: pointer;
 	transition: text-decoration 0.2s ease;
 }
 
-.attendance-detail-link:hover {
+.list-detail-link:hover {
 	text-decoration: underline;
 }
 
 /* CSV出力ボタン */
-.attendance-csv-button {
+.list-button-export {
     display: block;
     margin: 20px auto 0;
     background: #000000;
@@ -145,15 +145,44 @@
     transition: background 0.3s ease;
 }
 
-.attendance-csv-button:hover {
+.list-button-export:hover {
     background: #333333;
 }
 
 /* ローディング */
-.attendance-loading {
+.list-loading {
 	font-size: 16px;
 	text-align: center;
 	color: #555;
 	margin: 30px 0;
 }
 
+/* タブ切り替えボタン */
+.list-tab-box {
+	width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    border-bottom: 1px solid #000;
+}
+
+.list-tab-button {
+	width: 150px;
+    background: none;
+    border: none;
+    font-size: 15px;
+    color: #555;
+    padding: 8px 0;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+}
+
+.list-tab-button:hover {
+    color: #000;
+}
+
+/* アクティブなタブ */
+.list-tab-button.active {
+    color: #000;
+    font-weight: bold;
+}

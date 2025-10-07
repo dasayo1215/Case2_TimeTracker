@@ -5,7 +5,7 @@ import { FaRegCalendarAlt } from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
 import { ja } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
-import '../../css/attendance-list.css';
+import '../../css/list-page.css';
 
 export default function AttendanceList() {
 	const getCurrentMonth = () => {
@@ -72,31 +72,31 @@ export default function AttendanceList() {
 	};
 
 	return (
-		<div className="attendance-list">
-			<div className="attendance-container">
-				<div className="attendance-header">
-					<h2 className="attendance-title">勤怠一覧</h2>
-					<div className="attendance-nav-box">
-						<button className="nav-btn gray" onClick={handlePrevMonth}>
+		<div className="list-page">
+			<div className="list-container">
+				<div className="list-header">
+					<h2 className="list-title">勤怠一覧</h2>
+					<div className="list-nav-box">
+						<button className="list-nav-btn gray" onClick={handlePrevMonth}>
 							← 前月
 						</button>
 
 						<div
-							className="nav-center"
-							onClick={() => document.querySelector('.nav-month-input')?.focus()}
+							className="list-nav-center"
+							onClick={() => document.querySelector('.list-nav-input')?.focus()}
 						>
-							<FaRegCalendarAlt className="nav-calendar-icon" />
+							<FaRegCalendarAlt className="list-nav-calendar-icon" />
 							<DatePicker
 								selected={selectedDate}
 								onChange={(date) => updateMonth(date)}
 								dateFormat="yyyy/MM"
 								showMonthYearPicker
 								locale={ja}
-								className="nav-month-input"
+								className="list-nav-input"
 							/>
 						</div>
 
-						<button className="nav-btn gray" onClick={handleNextMonth}>
+						<button className="list-nav-btn gray" onClick={handleNextMonth}>
 							翌月 →
 						</button>
 					</div>
@@ -104,17 +104,17 @@ export default function AttendanceList() {
 
 				{/* ===== テーブル ===== */}
 				{loading ? (
-					<p className="attendance-loading">読み込み中...</p>
+					<p className="list-loading">読み込み中...</p>
 				) : (
-					<table className="attendance-table">
+					<table className="list-table">
 						<thead>
-							<tr className="attendance-row attendance-row-head">
-								<th className="attendance-cell">日付</th>
-								<th className="attendance-cell">出勤</th>
-								<th className="attendance-cell">退勤</th>
-								<th className="attendance-cell">休憩</th>
-								<th className="attendance-cell">合計</th>
-								<th className="attendance-cell">詳細</th>
+							<tr className="list-row list-row-head">
+								<th className="list-cell">日付</th>
+								<th className="list-cell">出勤</th>
+								<th className="list-cell">退勤</th>
+								<th className="list-cell">休憩</th>
+								<th className="list-cell">合計</th>
+								<th className="list-cell">詳細</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -124,27 +124,22 @@ export default function AttendanceList() {
 								).padStart(2, '0')}`;
 								const record = records.find((r) => r.date.startsWith(dateStr));
 
-								// record がなくても安全に動くようにする
-								const detailId = record?.id ?? dateStr; // ← 出勤データなしなら日付を使う
+								const detailId = record?.id ?? dateStr;
 
 								return (
-									<tr key={day} className="attendance-row">
-										<td className="attendance-cell">{formatDate(dateStr)}</td>
-										<td className="attendance-cell">
-											{formatTime(record?.start_time)}
-										</td>
-										<td className="attendance-cell">
-											{formatTime(record?.end_time)}
-										</td>
-										<td className="attendance-cell">
+									<tr key={day} className="list-row">
+										<td className="list-cell">{formatDate(dateStr)}</td>
+										<td className="list-cell">{formatTime(record?.clock_in)}</td>
+										<td className="list-cell">{formatTime(record?.clock_out)}</td>
+										<td className="list-cell">
 											{formatDuration(record?.break_minutes)}
 										</td>
-										<td className="attendance-cell">
+										<td className="list-cell">
 											{formatDuration(record?.total_minutes)}
 										</td>
-										<td className="attendance-cell">
+										<td className="list-cell">
 											<Link
-												className="attendance-detail-link"
+												className="list-detail-link"
 												to={`/attendance/detail/${detailId}`}
 											>
 												詳細
