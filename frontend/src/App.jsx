@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-// useAuth を単体で使うのではなく、AuthProvider もインポート
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import GuestRoute from './components/GuestRoute';
@@ -15,23 +14,25 @@ import UserLogin from './pages/user/Login';
 import AttendanceForm from './pages/user/AttendanceForm';
 import AttendanceList from './pages/user/AttendanceList';
 import AttendanceDetail from './pages/user/AttendanceDetail';
-import RequestList from './pages/user/RequestList';
+import EmailVerificationNotice from './pages/user/EmailVerificationNotice';
 
 import AdminLogin from './pages/admin/Login';
 import AdminAttendanceList from './pages/admin/AttendanceList';
 import AdminAttendanceDetail from './pages/admin/AttendanceDetail';
-// import StaffList from './pages/admin/StaffList';
-// import StaffAttendanceList from './pages/admin/StaffAttendanceList';
-// import AdminRequestList from './pages/admin/RequestList';
-// import ApproveRequest from './pages/admin/RequestApprove';
+import StaffList from './pages/admin/StaffList';
+import StaffAttendanceList from './pages/admin/StaffAttendanceList';
+import RequestApprove from './pages/admin/RequestApprove';
+
+// 共通の申請一覧切替コンポーネント
+import RequestListSelector from './pages/RequestListSelector';
 
 /**
  * Layoutコンポーネント
  * → AuthContextのuser情報を使ってヘッダー切り替えやルーティングを行う
  */
 function Layout() {
-	const { user } = useAuth(); // 現在のユーザー情報（未ログインなら null）
-	const role = user ? user.role : 'guest'; // 未ログイン時は 'guest'
+	const { user } = useAuth();
+	const role = user ? user.role : 'guest';
 
 	return (
 		<>
@@ -39,25 +40,6 @@ function Layout() {
 			{role === 'guest' && <GuestHeader />}
 			{role === 'admin' && <AdminHeader />}
 			{role === 'user' && <UserHeader />}
-
-			{/* ★ デバッグ用：ログイン中ユーザーを表示 */}
-			{/* <div
-				style={{
-					marginTop: '50px',
-					background: '#ff0000ff',
-					padding: '6px 10px',
-					fontSize: '14px',
-					color: '#333',
-				}}
-			>
-				{user ? (
-					<>
-						ログイン中ユーザー：<strong>{user.name}</strong>（{user.role}）
-					</>
-				) : (
-					<span>未ログイン（guest）</span>
-				)}
-			</div> */}
 
 			<Routes>
 				{/* -------------------------- */}
@@ -76,6 +58,14 @@ function Layout() {
 					element={
 						<GuestRoute>
 							<UserLogin />
+						</GuestRoute>
+					}
+				/>
+				<Route
+					path="/email/verify/notice"
+					element={
+						<GuestRoute>
+							<EmailVerificationNotice />
 						</GuestRoute>
 					}
 				/>
@@ -104,14 +94,6 @@ function Layout() {
 					element={
 						<ProtectedRoute allowedRoles={['user']}>
 							<AttendanceDetail />
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path="/stamp_correction_request/list"
-					element={
-						<ProtectedRoute allowedRoles={['user']}>
-							<RequestList />
 						</ProtectedRoute>
 					}
 				/>
@@ -147,13 +129,43 @@ function Layout() {
 						</ProtectedRoute>
 					}
 				/>
-				{/* <Route path="/admin/staff/list" element={<StaffList />} /> */}
-				{/* <Route path="/admin/attendance/staff/:id" element={<StaffAttendanceList />} /> */}
-				{/* <Route path="/admin/stamp_correction_request/list" element={<AdminRequestList />} /> */}
-				{/* <Route
-					path="/admin/stamp_correction_request/approve/:attendance_correct_request_id"
-					element={<ApproveRequest />}
-				/> */}
+				<Route
+					path="/admin/staff/list"
+					element={
+						<ProtectedRoute allowedRoles={['admin']}>
+							<StaffList />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/admin/attendance/staff/:id"
+					element={
+						<ProtectedRoute allowedRoles={['admin']}>
+							<StaffAttendanceList />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/stamp_correction_request/approve/:attendance_correct_request_id"
+					element={
+						<ProtectedRoute allowedRoles={['admin']}>
+							<RequestApprove />
+						</ProtectedRoute>
+					}
+				/>
+
+				{/* -------------------------- */}
+				{/* 共通URL: 申請一覧（要ログイン） */}
+				{/* 認証ミドルウェアでadmin/userを切り替え */}
+				{/* -------------------------- */}
+				<Route
+					path="/stamp_correction_request/list"
+					element={
+						<ProtectedRoute allowedRoles={['admin', 'user']}>
+							<RequestListSelector />
+						</ProtectedRoute>
+					}
+				/>
 			</Routes>
 		</>
 	);

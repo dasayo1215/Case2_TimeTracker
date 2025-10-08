@@ -27,8 +27,7 @@ class DevSeeder extends Seeder
         User::factory($userCount)->create([
             'role' => 'user',
         ])->each(function ($user) {
-            // 2025-08-20 ～ 2025-10-10 の日付範囲を作成
-            $period = CarbonPeriod::create('2025-08-20', '2025-10-10');
+            $period = CarbonPeriod::create('2025-09-20', '2025-11-10');
 
             foreach ($period as $date) {
                 if ($date->isWeekend()) {

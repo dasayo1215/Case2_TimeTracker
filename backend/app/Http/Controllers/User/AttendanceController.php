@@ -45,11 +45,15 @@ class AttendanceController extends Controller
                 'clock_in' => $a->clock_in,
                 'clock_out' => $a->clock_out,
                 'break_minutes' => $breakMinutes,
-                'total_minutes' => $totalMinutes ? max($totalMinutes - $breakMinutes, 0) : null,
+                'total_minutes' => isset($totalMinutes)
+                    ? max($totalMinutes - $breakMinutes, 0)
+                    : null,
             ];
         });
 
-        return response()->json($records);
+        return response()->json([
+            'records' => $records,
+        ]);
     }
 
     public function getDetail($id)

@@ -7,20 +7,31 @@ export const AuthProvider = ({ children }) => {
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
 
-	// Cookie を常に送信する設定
 	axios.defaults.withCredentials = true;
 
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
-				// Sanctum の CSRF Cookie を先に取得
 				await axios.get('/sanctum/csrf-cookie');
 
-				const isAdminPath = window.location.pathname.startsWith('/admin');
-				const url = isAdminPath ? '/api/admin/user' : '/api/user';
+				const pathname = window.location.pathname;
 
-				// 現在ログイン中のユーザー情報を取得
-				const res = await axios.get(url);
+				// 💡 まず admin 側を優先的に試す
+				let res;
+				try {
+					if (
+						pathname.startsWith('/admin') ||
+						pathname.startsWith('/stamp_correction_request')
+					) {
+						res = await axios.get('/api/admin/user');
+					} else {
+						throw new Error('skip admin check');
+					}
+				} catch {
+					// adminセッションでなければ一般ユーザー用を試す
+					res = await axios.get('/api/user');
+				}
+
 				setUser(res.data);
 			} catch (error) {
 				setUser(null);
@@ -33,9 +44,7 @@ export const AuthProvider = ({ children }) => {
 	}, []);
 
 	return (
-		<AuthContext.Provider value={{ user, setUser, loading }}>
-			{!loading && children}
-		</AuthContext.Provider>
+		<AuthContext.Provider value={{ user, setUser, loading }}>{children}</AuthContext.Provider>
 	);
 };
 

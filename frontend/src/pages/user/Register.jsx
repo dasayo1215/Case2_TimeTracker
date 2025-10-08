@@ -18,10 +18,10 @@ export default function Register() {
 		setErrors({});
 
 		try {
-			// 1. CSRF Cookie を取得
+			// CSRF Cookie を取得
 			await axios.get('/sanctum/csrf-cookie');
 
-			// 2. 登録リクエスト
+			// 登録リクエスト
 			const res = await axios.post('/api/register', {
 				name,
 				email,
@@ -29,11 +29,8 @@ export default function Register() {
 				password_confirmation: passwordConfirmation,
 			});
 
-			// 3. ユーザー情報を Context に保存
-			setUser(res.data.user);
-
-			// 4. 成功時は勤怠登録画面へ遷移
-			navigate('/attendance');
+			// 成功時は勤怠登録画面へ遷移
+			navigate('/email/verify/notice');
 		} catch (err) {
 			if (err.response?.status === 422) {
 				setErrors(err.response.data.errors || {});

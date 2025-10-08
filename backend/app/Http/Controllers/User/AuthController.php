@@ -8,6 +8,7 @@ use App\Http\Requests\LoginRequest;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Illuminate\Support\Facades\Auth;
 use App\Actions\Fortify\CreateNewUser;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -16,14 +17,38 @@ class AuthController extends Controller
     {
         $data = $request->validated();
 
+        // 既存ユーザーの確認
+        $existing = User::where('email', $data['email'])->first();
+
+        if ($existing) {
+            if ($existing->hasVerifiedEmail()) {
+                // 認証済み
+                return response()->json([
+                    'errors' => ['email' => ['このメールアドレスは既に登録されています。']],
+                ], 422);
+            } else {
+                // 認証未完了 → メールを再送
+                $existing->sendEmailVerificationNotification();
+
+                return response()->json([
+                    'message' => '以前登録されたメールアドレスが未認証のため、認証メールを再送しました。',
+                    'resend' => true,
+                ]);
+            }
+        }
+
+        // 新規ユーザー作成
         $user = $creator->create($data);
 
-        Auth::login($user);
+        // 認証メール送信
+        $user->sendEmailVerificationNotification();
+
+        \Auth::login($user);
 
         return response()->json([
-            'message' => '会員登録が完了しました',
+            'message' => '登録していただいたメールアドレスに認証メールを送付しました。',
             'user' => $user,
-        ]);
+        ], 200);
     }
 
     // ログイン

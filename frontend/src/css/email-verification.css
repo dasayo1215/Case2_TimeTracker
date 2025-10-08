@@ -1,0 +1,50 @@
+.email-verify-content {
+	background-color: #fff;
+	width: 90%;
+	padding: 80px 20px;
+	text-align: center;
+    display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+    position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.email-verify-text {
+	font-size: 16px;
+	color: #000;
+    font-weight: bold;
+	line-height: 1.6;
+	margin-bottom: 50px;
+}
+
+.verify-button {
+	display: inline-block;
+	background-color: #eee;
+	color: #000;
+	border: 1px solid #999;
+	border-radius: 4px;
+	padding: 10px 20px;
+	text-decoration: none;
+	font-weight: bold;
+	transition: background-color 0.3s;
+}
+
+.verify-button:hover {
+	background-color: #ddd;
+}
+
+.resend-link {
+	display: block;
+	margin-top: 50px;
+	font-size: 15px;
+	color: #1976d2;
+	text-decoration: none;
+}
+
+.resend-link:hover {
+	text-decoration: underline;
+}

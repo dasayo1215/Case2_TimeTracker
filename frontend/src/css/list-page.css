@@ -131,24 +131,6 @@
 	text-decoration: underline;
 }
 
-/* CSV出力ボタン */
-.list-button-export {
-    display: block;
-    margin: 20px auto 0;
-    background: #000000;
-    color: #ffffff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-.list-button-export:hover {
-    background: #333333;
-}
-
 /* ローディング */
 .list-loading {
 	font-size: 16px;
@@ -185,4 +167,27 @@
 .list-tab-button.active {
     color: #000;
     font-weight: bold;
+}
+
+.csv-button-container {
+    display: flex;
+    justify-content: flex-end;
+    max-width: 800px;
+    margin: 20px auto 0;
+}
+
+.csv-export-btn {
+    background-color: #000;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.csv-export-btn:hover {
+    background-color: #333;
 }

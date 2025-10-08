@@ -5,13 +5,31 @@ export default function ProtectedRoute({ children, allowedRoles = [] }) {
 	const { user, loading } = useAuth();
 	const location = useLocation();
 
-	if (loading) return null;
+	// ロールをセッションに記憶（ログアウト後も一瞬だけ使える）
+	if (user?.role) {
+		sessionStorage.setItem('lastRole', user.role);
+	}
+
+	// AuthContextがまだ初期化中なら、何もリダイレクトせず待つ
+	if (loading) {
+		return (
+			<div style={{ textAlign: 'center', marginTop: '50px', color: '#555' }}>
+				認証情報を確認中です...
+			</div>
+		);
+	}
 
 	// --- 未ログイン時 ---
 	if (!user) {
-		// ロール制限が admin の場合は /admin/login へ
-		const shouldGoAdminLogin = allowedRoles.includes('admin');
-		return <Navigate to={shouldGoAdminLogin ? '/admin/login' : '/login'} replace />;
+		const lastRole = sessionStorage.getItem('lastRole');
+		const isAdminPath = location.pathname.startsWith('/admin');
+		let redirectPath = '/login';
+
+		if (lastRole === 'admin' || isAdminPath) {
+			redirectPath = '/admin/login';
+		}
+
+		return <Navigate to={redirectPath} replace state={{ from: location }} />;
 	}
 
 	// --- ロール不一致時 ---
@@ -22,5 +40,6 @@ export default function ProtectedRoute({ children, allowedRoles = [] }) {
 		return <Navigate to="/attendance" replace />;
 	}
 
+	// --- 通常時 ---
 	return children;
 }

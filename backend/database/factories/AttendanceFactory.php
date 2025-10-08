@@ -15,14 +15,21 @@ class AttendanceFactory extends Factory
         $approvedAt  = null;
         $remarks     = null;
 
+        $remarksList = [
+            '電車遅延のため',
+            '体調不良のため',
+            '私用のため早退',
+            '客先訪問のため外出',
+        ];
+
         if ($status === 'pending') {
             $submittedAt = $this->faker->dateTime();
-            $remarks     = $this->faker->sentence(); // 必須
+            $remarks     = $this->faker->randomElement($remarksList);
         } elseif ($status === 'approved') {
             $submittedAt = $this->faker->dateTime();
             // approved_at は submitted_at の翌日
             $approvedAt  = (clone $submittedAt)->modify('+1 day');
-            $remarks     = $this->faker->sentence(); // 必須
+            $remarks     = $this->faker->randomElement($remarksList);
         }
 
         return [

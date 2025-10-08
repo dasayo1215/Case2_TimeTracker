@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../css/attendance-detail.css';
 
-export default function AttendanceDetailView({ id, apiBase }) {
+export default function AttendanceDetailView({ id, apiBase, mode = 'normal' }) {
 	const [record, setRecord] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
@@ -30,9 +30,11 @@ export default function AttendanceDetailView({ id, apiBase }) {
 		const fetchData = async () => {
 			try {
 				await axios.get('/sanctum/csrf-cookie');
-                const res = await axios.get(
-                    apiBase.includes('/admin') ? `${apiBase}/attendance/${id}` :
-                    `${apiBase}/attendance/detail/${id}`);
+				const res = await axios.get(
+					apiBase.includes('/admin')
+						? `${apiBase}/attendance/${id}`
+						: `${apiBase}/attendance/detail/${id}`
+				);
 
 				// 管理者APIは user.name を返す仕様
 				const userName =
@@ -83,8 +85,8 @@ export default function AttendanceDetailView({ id, apiBase }) {
 		try {
 			await axios.get('/sanctum/csrf-cookie');
 
-            const payload = {
-                user_id: record.user_id,
+			const payload = {
+				user_id: record.user_id,
 				date: record.date,
 				clock_in: addSeconds(record.clock_in),
 				clock_out: addSeconds(record.clock_out),
@@ -147,7 +149,7 @@ export default function AttendanceDetailView({ id, apiBase }) {
 								<tr className="detail-row">
 									<th className="detail-cell-head">出勤・退勤</th>
 									<td className="detail-cell">
-										{record.status === 'pending' ? (
+										{['pending', 'approved'].includes(record.status) ? (
 											<div className="time-grid">
 												<span className="time-text">
 													{record.clock_in || '--:--'}
@@ -199,7 +201,9 @@ export default function AttendanceDetailView({ id, apiBase }) {
 											<tr key={i} className="detail-row">
 												<th className="detail-cell-head">{label}</th>
 												<td className="detail-cell">
-													{record.status === 'pending' ? (
+													{['pending', 'approved'].includes(
+														record.status
+													) ? (
 														isLastEmpty ? (
 															<div className="time-grid">
 																<span className="time-text time-placeholder">
@@ -267,7 +271,7 @@ export default function AttendanceDetailView({ id, apiBase }) {
 								<tr className="detail-row">
 									<th className="detail-cell-head">備考</th>
 									<td className="detail-cell">
-										{record.status === 'pending' ? (
+										{['pending', 'approved'].includes(record.status) ? (
 											<p>{record.remarks || '（なし）'}</p>
 										) : (
 											<textarea
@@ -297,10 +301,10 @@ export default function AttendanceDetailView({ id, apiBase }) {
 						)}
 
 						{/* ステータス別UI */}
-						{record.status === 'normal' && (
+						{record.status === 'normal' && mode === 'normal' && (
 							<div className="detail-btn-box">
-                                <button
-                                    type="button"
+								<button
+									type="button"
 									className="detail-btn"
 									onClick={handleSubmit}
 									disabled={submitting}
@@ -310,8 +314,42 @@ export default function AttendanceDetailView({ id, apiBase }) {
 							</div>
 						)}
 
-						{record.status === 'pending' && (
+						{mode === 'normal' && record.status === 'pending' && (
 							<p className="detail-pending-msg">＊承認待ちのため修正はできません。</p>
+						)}
+
+						{/* === 管理者承認用 === */}
+						{mode === 'approval' && record.status === 'pending' && (
+							<div className="detail-btn-box">
+								<button
+									type="button"
+									className="detail-btn"
+									onClick={async () => {
+										try {
+											await axios.post(`${apiBase}/attendance/approve/${id}`);
+											setRecord((prev) => ({ ...prev, status: 'approved' }));
+											alert('承認が完了しました！');
+										} catch (err) {
+											console.error('承認エラー:', err);
+											alert('承認に失敗しました。');
+										}
+									}}
+								>
+									承認
+								</button>
+							</div>
+						)}
+
+						{mode === 'approval' && record.status === 'approved' && (
+							<div className="detail-btn-box">
+								<button
+									type="button"
+									className="detail-btn detail-btn-disabled"
+									disabled
+								>
+									承認済み
+								</button>
+							</div>
 						)}
 					</>
 				)}

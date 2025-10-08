@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../css/auth-form.css';
 import { useAuth } from '../contexts/AuthContext';
+import { Toaster, toast } from 'react-hot-toast';
+import { useRef } from 'react';
 
 export default function LoginForm({ isAdmin = false }) {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [errors, setErrors] = useState({});
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { setUser } = useAuth();
+
+	const hasShownToast = useRef(false);
+	useEffect(() => {
+		const params = new URLSearchParams(location.search);
+		if (params.get('verified') === '1' && !hasShownToast.current) {
+			hasShownToast.current = true;
+			toast.success('メール認証が完了しました！', {
+				duration: 3000,
+				position: 'top-right',
+			});
+		}
+	}, [location]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -39,6 +54,7 @@ export default function LoginForm({ isAdmin = false }) {
 
 	return (
 		<div className="auth-form">
+			<Toaster />
 			<h2 className="auth-form-heading">{isAdmin ? '管理者ログイン' : 'ログイン'}</h2>
 
 			<form className="auth-form-body" onSubmit={handleSubmit}>

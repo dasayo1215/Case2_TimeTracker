@@ -156,6 +156,12 @@
 	transform: scale(1.03);
 }
 
+.detail-btn-disabled {
+    background-color: #888;
+    cursor: default;
+	pointer-events: none;
+}
+
 /* ローディング・エラー */
 .detail-loading,
 .detail-error {
