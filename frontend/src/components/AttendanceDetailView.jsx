@@ -30,29 +30,50 @@ export default function AttendanceDetailView({ id, apiBase, mode = 'normal' }) {
 		const fetchData = async () => {
 			try {
 				await axios.get('/sanctum/csrf-cookie');
-				const res = await axios.get(
-					apiBase.includes('/admin')
-						? `${apiBase}/attendance/${id}`
-						: `${apiBase}/attendance/detail/${id}`
+
+				// ユーザー情報を取得
+				const userRes = await axios.get(
+					apiBase.includes('/admin') ? '/api/admin/user' : '/api/user'
 				);
+				const loginUser = userRes.data;
 
-				// 管理者APIは user.name を返す仕様
-				const userName =
-					res.data?.user?.name ?? res.data?.user_name ?? '（ログインユーザー）';
+				// 勤怠詳細データを取得
+				let res = null;
+				try {
+					res = await axios.get(
+						apiBase.includes('/admin')
+							? `${apiBase}/attendance/${id}`
+							: `${apiBase}/attendance/detail/${id}`
+					);
+				} catch {
+					// 404などの場合は無視
+				}
 
-				setRecord({
-					user_name: userName,
-					user_id: res.data?.user_id ?? res.data?.user?.id ?? null,
-					date: res.data?.date ?? res.data?.work_date ?? '',
-					clock_in: toHHMM(res.data?.clock_in),
-					clock_out: toHHMM(res.data?.clock_out),
-					remarks: res.data?.remarks ?? '',
-					breakTimes: (res.data?.breakTimes ?? []).map((b) => ({
-						break_start: toHHMM(b?.break_start),
-						break_end: toHHMM(b?.break_end),
-					})),
-					status: res.data?.status ?? 'normal',
-				});
+				if (res?.data) {
+					const data = res.data;
+					const userName =
+						data?.user?.name ??
+						data?.user_name ??
+						loginUser.name ??
+						'（ユーザー名）';
+
+					setRecord({
+						user_name: userName,
+						user_id: data?.user_id ?? data?.user?.id ?? loginUser.id ?? null,
+						date: data?.date ?? data?.work_date ?? id ?? '',
+						clock_in: toHHMM(data?.clock_in),
+						clock_out: toHHMM(data?.clock_out),
+						remarks: data?.remarks ?? '',
+						breakTimes: (data?.breakTimes ?? []).map((b) => ({
+							break_start: toHHMM(b?.break_start),
+							break_end: toHHMM(b?.break_end),
+						})),
+						status: data?.status ?? 'normal',
+					});
+				} else {
+					setRecord(null);
+					return;
+				}
 			} catch (err) {
 				console.error('詳細取得失敗:', err);
 				setRecord(null);
@@ -60,8 +81,9 @@ export default function AttendanceDetailView({ id, apiBase, mode = 'normal' }) {
 				setLoading(false);
 			}
 		};
+
 		fetchData();
-	}, [id, apiBase]);
+	}, [apiBase, id]);
 
 	// ===== 入力変更 =====
 	const handleChange = (field, value) => {
@@ -99,20 +121,21 @@ export default function AttendanceDetailView({ id, apiBase, mode = 'normal' }) {
 					})),
 			};
 
-			await axios.post(`${apiBase}/attendance/update-or-create/${id}`, payload);
+			const url = `${apiBase}/attendance/update-or-create/${id}`;
+
+			await axios.post(url, payload);
 
 			if (apiBase.includes('/admin')) {
 				setRecord((prev) => ({ ...prev, status: 'approved' }));
-				alert('勤怠データを更新しました！（approved）');
+				alert('勤怠データを更新しました！');
 			} else {
 				setRecord((prev) => ({ ...prev, status: 'pending' }));
-				alert('修正申請を送信しました！（pending）');
+				alert('修正申請を送信しました！');
 			}
 		} catch (err) {
 			console.error('申請エラー:', err);
 			if (err.response?.status === 422) {
-				const errorData = err.response.data.errors;
-				const flatMessages = Object.values(errorData).flat();
+				const flatMessages = Object.values(err.response.data.errors).flat();
 				setErrors(flatMessages);
 			} else {
 				setErrors(['予期しないエラーが発生しました']);
@@ -149,7 +172,8 @@ export default function AttendanceDetailView({ id, apiBase, mode = 'normal' }) {
 								<tr className="detail-row">
 									<th className="detail-cell-head">出勤・退勤</th>
 									<td className="detail-cell">
-										{['pending', 'approved'].includes(record.status) ? (
+										{(mode === 'user' && record.status === 'pending') ||
+										mode === 'approval' ? (
 											<div className="time-grid">
 												<span className="time-text">
 													{record.clock_in || '--:--'}
@@ -197,13 +221,15 @@ export default function AttendanceDetailView({ id, apiBase, mode = 'normal' }) {
 											!b.break_end &&
 											i === breaks.length - 1;
 
+										const isReadOnly =
+											(mode === 'user' && record.status === 'pending') ||
+											mode === 'approval';
+
 										return (
 											<tr key={i} className="detail-row">
 												<th className="detail-cell-head">{label}</th>
 												<td className="detail-cell">
-													{['pending', 'approved'].includes(
-														record.status
-													) ? (
+													{isReadOnly ? (
 														isLastEmpty ? (
 															<div className="time-grid">
 																<span className="time-text time-placeholder">
@@ -271,7 +297,8 @@ export default function AttendanceDetailView({ id, apiBase, mode = 'normal' }) {
 								<tr className="detail-row">
 									<th className="detail-cell-head">備考</th>
 									<td className="detail-cell">
-										{['pending', 'approved'].includes(record.status) ? (
+										{(mode === 'user' && record.status === 'pending') ||
+										mode === 'approval' ? (
 											<p>{record.remarks || '（なし）'}</p>
 										) : (
 											<textarea
@@ -300,55 +327,67 @@ export default function AttendanceDetailView({ id, apiBase, mode = 'normal' }) {
 							</div>
 						)}
 
-						{/* ステータス別UI */}
-						{record.status === 'normal' && mode === 'normal' && (
-							<div className="detail-btn-box">
-								<button
-									type="button"
-									className="detail-btn"
-									onClick={handleSubmit}
-									disabled={submitting}
-								>
-									{submitting ? '送信中…' : '修正'}
-								</button>
-							</div>
+						{/* === ボタンエリア === */}
+						{(mode === 'user' || mode === 'admin') && (
+							<>
+								{/* 一般ユーザーは normal / approved のときだけ修正可能 */}
+								{(mode === 'admin' ||
+									['normal', 'approved'].includes(record.status)) && (
+									<div className="detail-btn-box">
+										<button
+											type="button"
+											className="detail-btn"
+											onClick={handleSubmit}
+											disabled={submitting}
+										>
+											{submitting ? '送信中…' : '修正'}
+										</button>
+									</div>
+								)}
+
+								{/* 一般ユーザーで pending のときだけ非表示メッセージ */}
+								{mode === 'user' && record.status === 'pending' && (
+									<p className="detail-pending-msg">
+										＊承認待ちのため修正はできません。
+									</p>
+								)}
+							</>
 						)}
 
-						{mode === 'normal' && record.status === 'pending' && (
-							<p className="detail-pending-msg">＊承認待ちのため修正はできません。</p>
-						)}
-
-						{/* === 管理者承認用 === */}
-						{mode === 'approval' && record.status === 'pending' && (
+						{/* === 承認モード === */}
+						{mode === 'approval' && (
 							<div className="detail-btn-box">
-								<button
-									type="button"
-									className="detail-btn"
-									onClick={async () => {
-										try {
-											await axios.post(`${apiBase}/attendance/approve/${id}`);
-											setRecord((prev) => ({ ...prev, status: 'approved' }));
-											alert('承認が完了しました！');
-										} catch (err) {
-											console.error('承認エラー:', err);
-											alert('承認に失敗しました。');
-										}
-									}}
-								>
-									承認
-								</button>
-							</div>
-						)}
-
-						{mode === 'approval' && record.status === 'approved' && (
-							<div className="detail-btn-box">
-								<button
-									type="button"
-									className="detail-btn detail-btn-disabled"
-									disabled
-								>
-									承認済み
-								</button>
+								{record.status === 'pending' ? (
+									<button
+										type="button"
+										className="detail-btn"
+										onClick={async () => {
+											try {
+												await axios.post(
+													`${apiBase}/attendance/approve/${id}`
+												);
+												setRecord((prev) => ({
+													...prev,
+													status: 'approved',
+												}));
+												alert('承認が完了しました！');
+											} catch (err) {
+												console.error('承認エラー:', err);
+												alert('承認に失敗しました。');
+											}
+										}}
+									>
+										承認
+									</button>
+								) : (
+									<button
+										type="button"
+										className="detail-btn detail-btn-disabled"
+										disabled
+									>
+										承認済み
+									</button>
+								)}
 							</div>
 						)}
 					</>

@@ -24,10 +24,9 @@ Route::post('/api/logout', [UserAuthController::class, 'logout']);
 
 // メール認証関連
 Route::middleware(['web'])->group(function () {
+    // SPA構成では直接呼ばれないが、Laravel内部のメール認証リダイレクト対策で残す
     Route::get('/api/email/verify', [EmailVerificationController::class, 'showNotice'])
         ->name('verification.notice');
-
-    // 🔸 再送は未ログインでも呼べるように変更
     Route::post('/api/email/verification-notification', [EmailVerificationController::class, 'resendVerificationEmail'])
         ->middleware('throttle:6,1')
         ->name('verification.send');
@@ -65,7 +64,7 @@ Route::middleware(['web', 'auth:web'])->group(function () {
     // ---- 打刻・修正など操作系 ----
     Route::post('/api/attendance/clock', [UserAttendanceActionController::class, 'clock']);
     Route::post('/api/attendance/update-or-create/{id}', [UserAttendanceActionController::class, 'updateOrCreate'])
-        ->whereNumber('id');
+        ->where('id', '[0-9]+|new');
 });
 
 // 勤怠API（管理者用）
@@ -80,13 +79,13 @@ Route::prefix('api/admin')
         ->whereNumber('id');
     Route::get('/attendance/{id}', [AdminAttendanceController::class, 'getDetail'])
         ->whereNumber('id');
-    Route::post('/attendance/approve/{id}', [AdminAttendanceController::class, 'approve'])
-        ->whereNumber('id');
     Route::get('/attendance/staff/{id}/export', [AdminAttendanceController::class, 'exportCsv'])
         ->whereNumber('id');
 
     // ---- 操作系 ----
     Route::post('/attendance/update-or-create/{id}', [AdminAttendanceActionController::class, 'updateOrCreate'])
+        ->whereNumber('id');
+    Route::post('/attendance/approve/{id}', [AdminAttendanceActionController::class, 'approve'])
         ->whereNumber('id');
 
     // ---- スタッフ関連 ----

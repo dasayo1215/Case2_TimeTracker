@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { FaRegCalendarAlt } from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
 import { ja } from 'date-fns/locale';
@@ -18,18 +18,49 @@ export default function AttendanceListBase({
 	const [month, setMonth] = useState(null); // ← 初期は null（指定なし）
 	const [loading, setLoading] = useState(true);
 
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	// ✅ 初回マウント時のみ、monthを今月に設定
 	useEffect(() => {
+		if (!month) {
+			const today = new Date();
+			const thisMonth = `${today.getFullYear()}/${String(today.getMonth() + 1).padStart(
+				2,
+				'0'
+			)}`;
+			setMonth(thisMonth);
+		}
+	}, []);
+
+	// ✅ monthが変わったとき、URLに反映（初期ロード時は除外）
+	useEffect(() => {
+		if (!month) return;
+		const queryMonth = searchParams.get('month')?.replace('-', '/');
+		if (queryMonth !== month) {
+			setSearchParams({ month: month.replace('/', '-') });
+		}
+	}, [month]);
+
+	// ✅ クエリが変わったとき → 戻る／進む対応
+	useEffect(() => {
+		const queryMonth = searchParams.get('month');
+		if (queryMonth) {
+			const normalized = queryMonth.replace('-', '/');
+			if (normalized !== month) setMonth(normalized);
+		}
+	}, [searchParams]);
+
+	// ✅ データ取得
+	useEffect(() => {
+		if (!month) return;
 		const fetchData = async () => {
 			try {
 				setLoading(true);
 				await axios.get('/sanctum/csrf-cookie');
-
 				const param = month ? `?month=${month.replace('/', '-')}` : '';
 				const res = await axios.get(`${apiEndpoint}${param}`);
-
-                setRecords(res.data.records || []);
-
-                if (onLoaded && res.data.staff) onLoaded(res.data.staff);
+				setRecords(res.data.records || []);
+				if (onLoaded && res.data.staff) onLoaded(res.data.staff);
 			} catch (error) {
 				console.error(`${title}の取得に失敗しました:`, error);
 			} finally {
@@ -39,17 +70,13 @@ export default function AttendanceListBase({
 		fetchData();
 	}, [month, apiEndpoint]);
 
-	// もし records が空なら → 現在月から日数を生成
-	const today = new Date();
-	const [y, m] = month
-		? month.split('/').map((v) => parseInt(v, 10))
-		: [today.getFullYear(), today.getMonth() + 1];
-
+	// ✅ 表示用
+	const [y, m] = month ? month.split('/').map((v) => parseInt(v, 10)) : [null, null];
 	const getDaysInMonth = (year, month) => {
 		const lastDay = new Date(year, month, 0).getDate();
 		return Array.from({ length: lastDay }, (_, i) => i + 1);
 	};
-	const days = getDaysInMonth(y, m);
+	const days = y && m ? getDaysInMonth(y, m) : [];
 
 	const formatDate = (dateStr) => {
 		const date = new Date(dateStr);
@@ -82,23 +109,17 @@ export default function AttendanceListBase({
 			const res = await axios.get(`${apiEndpoint}/export${param}`, {
 				responseType: 'blob',
 			});
-
 			const blob = new Blob([res.data], { type: 'text/csv;charset=utf-8;' });
 			const url = window.URL.createObjectURL(blob);
 			const link = document.createElement('a');
 			link.href = url;
-
-			// サーバのファイル名を使う
 			let filename = '勤怠.csv';
 			const disposition = res.headers['content-disposition'];
 			if (disposition) {
 				const match = disposition.match(/filename\*?=['"]?UTF-8''?([^;"']+)/i);
-				if (match) {
-					filename = decodeURIComponent(match[1]);
-				}
+				if (match) filename = decodeURIComponent(match[1]);
 			}
 			link.download = filename;
-
 			document.body.appendChild(link);
 			link.click();
 			link.remove();
@@ -185,12 +206,16 @@ export default function AttendanceListBase({
 												{formatDuration(record?.total_minutes)}
 											</td>
 											<td className="list-cell">
-												<Link
-													className="list-detail-link"
-													to={`${detailPathBase}/${detailId}`}
-												>
-													詳細
-												</Link>
+												{record ? (
+													<Link
+														className="list-detail-link"
+														to={`${detailPathBase}/${detailId}`}
+													>
+														詳細
+													</Link>
+												) : (
+													'' // データがない日は空欄
+												)}
 											</td>
 										</tr>
 									);

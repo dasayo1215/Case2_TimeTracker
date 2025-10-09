@@ -22,66 +22,54 @@ class AttendanceActionController extends Controller
         $remarks  = $validated['remarks'] ?? null;
         $date     = $validated['date'] ?? null;
 
-        // 該当日の勤怠データを取得
+        // 対象の勤怠データを取得
         $attendance = Attendance::where('user_id', $userId)
             ->where('work_date', $date)
             ->first();
 
-        if ($attendance) {
-            // ====== 既存レコードあり ======
-            if ($attendance->status === 'normal') {
-                // normal → approved に昇格して修正を反映
-                $attendance->update([
-                    'clock_in'     => $clockIn,
-                    'clock_out'    => $clockOut,
-                    'remarks'      => $remarks,
-                    'status'       => 'approved',
-                    'submitted_at' => now(),
-                    'approved_at'  => now(),
+        // データが存在しない場合はエラー
+        if (!$attendance) {
+            return response()->json([
+                'message' => '指定された勤怠データが存在しません',
+            ], 404);
+        }
+
+        // 管理者は normal / pending / approved すべて修正可能
+        $attendance->update([
+            'clock_in'     => $clockIn,
+            'clock_out'    => $clockOut,
+            'remarks'      => $remarks,
+            'status'       => 'approved',   // 修正後は必ず approved に統一
+            'submitted_at' => now(),
+            'approved_at'  => now(),        // 再承認扱い
+        ]);
+
+        // 休憩時間を再登録
+        $attendance->breakTimes()->delete();
+        foreach ($validated['breakTimes'] ?? [] as $b) {
+            if ($b['break_start'] || $b['break_end']) {
+                $attendance->breakTimes()->create([
+                    'break_start' => $b['break_start'],
+                    'break_end'   => $b['break_end'],
                 ]);
-
-                // 休憩再登録
-                $attendance->breakTimes()->delete();
-                foreach ($validated['breakTimes'] ?? [] as $b) {
-                    if ($b['break_start'] || $b['break_end']) {
-                        $attendance->breakTimes()->create([
-                            'break_start' => $b['break_start'],
-                            'break_end'   => $b['break_end'],
-                        ]);
-                    }
-                }
-            } else {
-                // approved の場合 → 修正を受け付けない
-                return response()->json([
-                    'message' => 'この勤怠データはすでに承認済みです（変更不可）',
-                ], 400);
-            }
-        } else {
-            // ====== 新規レコード（念のため対応） ======
-            $attendance = Attendance::create([
-                'user_id'      => $userId,
-                'work_date'    => $date,
-                'clock_in'     => $clockIn,
-                'clock_out'    => $clockOut,
-                'remarks'      => $remarks,
-                'status'       => 'approved',
-                'submitted_at' => now(),
-                'approved_at'  => now(),
-            ]);
-
-            foreach ($validated['breakTimes'] ?? [] as $b) {
-                if ($b['break_start'] || $b['break_end']) {
-                    $attendance->breakTimes()->create([
-                        'break_start' => $b['break_start'],
-                        'break_end'   => $b['break_end'],
-                    ]);
-                }
             }
         }
 
         return response()->json([
-            'message' => '勤怠データを更新しました（approved）',
+            'message' => '勤怠データを更新しました',
             'attendance_id' => $attendance->id,
         ]);
     }
+
+    public function approve($id)
+    {
+        $attendance = Attendance::findOrFail($id);
+        $attendance->update([
+            'status' => 'approved',
+            'approved_at' => now(),
+        ]);
+
+        return response()->json(['message' => 'Approved successfully']);
+    }
 }
+

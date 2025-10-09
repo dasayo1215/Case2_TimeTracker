@@ -151,17 +151,6 @@ class AttendanceController extends Controller
         );
     }
 
-    public function approve($id)
-    {
-        $attendance = Attendance::findOrFail($id);
-        $attendance->update([
-            'status' => 'approved',
-            'approved_at' => now(),
-        ]);
-
-        return response()->json(['message' => 'Approved successfully']);
-    }
-
     public function exportCsv(Request $request, $id)
     {
         $staff = User::findOrFail($id);

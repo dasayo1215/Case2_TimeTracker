@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { FaRegCalendarAlt } from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
 import { ja } from 'date-fns/locale';
@@ -10,14 +10,27 @@ import '../../css/list-page.css';
 export default function AdminAttendanceList() {
 	const [records, setRecords] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const [selectedDate, setSelectedDate] = useState(new Date());
+	const [selectedDate, setSelectedDate] = useState(null);
+	const [searchParams, setSearchParams] = useSearchParams();
 
+	// 初期化：クエリがあれば採用、なければ今日の日付をセット（→後でクエリにも反映される）
 	useEffect(() => {
+		const queryDate = searchParams.get('date');
+		if (queryDate) {
+			setSelectedDate(new Date(queryDate));
+		} else {
+			setSelectedDate(new Date());
+		}
+	}, []);
+
+	// selectedDate が変わるたびにデータ取得
+	useEffect(() => {
+		if (!selectedDate) return;
 		const fetchData = async () => {
 			try {
 				setLoading(true);
 				await axios.get('/sanctum/csrf-cookie');
-				const dateStr =selectedDate.toISOString().slice(0, 10);
+				const dateStr = selectedDate.toISOString().slice(0, 10);
 				const res = await axios.get(`/api/admin/attendance/list?date=${dateStr}`);
 				setRecords(res.data);
 			} catch (error) {
@@ -29,38 +42,65 @@ export default function AdminAttendanceList() {
 		fetchData();
 	}, [selectedDate]);
 
-    const formatDateHeader = (date) => {
-        const y = date.getFullYear();
-        const m = date.getMonth() + 1;
-        const d = date.getDate();
-        return `${y}年${m}月${d}日の勤怠`;
-    };
+	// selectedDate が変わったらクエリにも反映
+	useEffect(() => {
+		if (!selectedDate) return;
+		const newDateStr = selectedDate.toISOString().slice(0, 10);
+		const currentQuery = searchParams.get('date');
+		if (currentQuery !== newDateStr) {
+			setSearchParams({ date: newDateStr });
+		}
+	}, [selectedDate]);
 
-    const formatTime = (t) => (t ? t.substring(0, 5) : '');
-    const formatDuration = (min) => {
-        if (min == null) return '';
-        const h = Math.floor(min / 60);
-        const m = min % 60;
-        return `${h}:${String(m).padStart(2, '0')}`;
-    };
+	// 戻る／進む対応（URLクエリ → stateへ反映）
+	useEffect(() => {
+		const queryDate = searchParams.get('date');
+		if (!queryDate) return;
+		const queryObj = new Date(queryDate);
+		if (
+			!selectedDate ||
+			queryObj.toISOString().slice(0, 10) !== selectedDate.toISOString().slice(0, 10)
+		) {
+			setSelectedDate(queryObj);
+		}
+	}, [searchParams]);
 
-    const handlePrevDay = () => {
-        const newDate = new Date(selectedDate);
-        newDate.setDate(selectedDate.getDate() - 1);
-        setSelectedDate(newDate);
-    };
+	// --- 日付操作・フォーマット関数 ---
+	const formatDateHeader = (date) => {
+		const y = date.getFullYear();
+		const m = date.getMonth() + 1;
+		const d = date.getDate();
+		return `${y}年${m}月${d}日の勤怠`;
+	};
 
-    const handleNextDay = () => {
-        const newDate = new Date(selectedDate);
-        newDate.setDate(selectedDate.getDate() + 1);
-        setSelectedDate(newDate);
-    };
+	const formatTime = (t) => (t ? t.substring(0, 5) : '');
+	const formatDuration = (min) => {
+		if (min == null) return '';
+		const h = Math.floor(min / 60);
+		const m = min % 60;
+		return `${h}:${String(m).padStart(2, '0')}`;
+	};
 
+	const handlePrevDay = () => {
+		const newDate = new Date(selectedDate);
+		newDate.setDate(selectedDate.getDate() - 1);
+		setSelectedDate(newDate);
+	};
+
+	const handleNextDay = () => {
+		const newDate = new Date(selectedDate);
+		newDate.setDate(selectedDate.getDate() + 1);
+		setSelectedDate(newDate);
+	};
+
+	// --- JSX ---
 	return (
 		<div className="list-page">
 			<div className="list-container">
 				<div className="list-header">
-					<h2 className="list-title">{formatDateHeader(selectedDate)}</h2>
+					<h2 className="list-title">
+						{selectedDate ? formatDateHeader(selectedDate) : '読み込み中...'}
+					</h2>
 					<div className="list-nav-box">
 						<button className="list-nav-btn gray" onClick={handlePrevDay}>
 							← 前日
@@ -71,13 +111,15 @@ export default function AdminAttendanceList() {
 							onClick={() => document.querySelector('.list-nav-input')?.focus()}
 						>
 							<FaRegCalendarAlt className="list-nav-calendar-icon" />
-							<DatePicker
-								selected={selectedDate}
-								onChange={(date) => setSelectedDate(date)}
-								dateFormat="yyyy/MM/dd"
-								locale={ja}
-								className="list-nav-input"
-							/>
+							{selectedDate && (
+								<DatePicker
+									selected={selectedDate}
+									onChange={(date) => setSelectedDate(date)}
+									dateFormat="yyyy/MM/dd"
+									locale={ja}
+									className="list-nav-input"
+								/>
+							)}
 						</div>
 
 						<button className="list-nav-btn gray" onClick={handleNextDay}>

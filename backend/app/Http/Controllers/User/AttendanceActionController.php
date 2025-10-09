@@ -60,17 +60,35 @@ class AttendanceActionController extends Controller
         $remarks  = $validated['remarks'] ?? '修正申請';
         $date     = $validated['date'] ?? null;
 
-        $attendance = Attendance::updateOrCreate(
-            ['user_id' => $user->id, 'work_date' => $date],
-            [
-                'clock_in' => $clockIn,
-                'clock_out' => $clockOut,
-                'remarks' => $remarks,
-                'status' => 'pending',
-                'submitted_at' => now(),
-            ]
-        );
+        // 対象データを取得
+        $attendance = Attendance::where('user_id', $user->id)
+            ->where('work_date', $date)
+            ->first();
 
+        // 該当日の勤怠が存在しない場合
+        if (!$attendance) {
+            return response()->json([
+                'message' => '指定された勤怠データが存在しません',
+            ], 404);
+        }
+
+        // pending中（申請中）の場合は修正不可
+        if ($attendance->status === 'pending') {
+            return response()->json([
+                'message' => 'この勤怠データは申請中のため、修正できません',
+            ], 400);
+        }
+
+        // normal または approved の場合は修正申請可能
+        $attendance->update([
+            'clock_in'     => $clockIn,
+            'clock_out'    => $clockOut,
+            'remarks'      => $remarks,
+            'status'       => 'pending',   // 修正申請中に変更
+            'submitted_at' => now(),
+        ]);
+
+        // 休憩時間を再登録
         $attendance->breakTimes()->delete();
 
         foreach ($validated['breakTimes'] ?? [] as $b) {
@@ -83,7 +101,7 @@ class AttendanceActionController extends Controller
         }
 
         return response()->json([
-            'message' => '勤怠データを申請しました（pending）',
+            'message' => '勤怠データを修正申請しました',
             'attendance_id' => $attendance->id,
         ]);
     }

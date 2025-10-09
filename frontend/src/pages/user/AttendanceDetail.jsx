@@ -3,5 +3,5 @@ import AttendanceDetailView from '../../components/AttendanceDetailView';
 
 export default function AttendanceDetail() {
 	const { id } = useParams();
-	return <AttendanceDetailView id={id} apiBase="/api" mode="normal" />;
+	return <AttendanceDetailView id={id} apiBase="/api" mode="user" />;
 }
