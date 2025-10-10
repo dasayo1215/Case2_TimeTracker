@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../css/auth-form.css';
 import { useAuth } from '../contexts/AuthContext';
-import { Toaster, toast } from 'react-hot-toast';
-import { useRef } from 'react';
 
 export default function LoginForm({ isAdmin = false }) {
 	const [email, setEmail] = useState('');
@@ -14,15 +12,17 @@ export default function LoginForm({ isAdmin = false }) {
 	const location = useLocation();
 	const { setUser } = useAuth();
 
-	const hasShownToast = useRef(false);
+	const hasShownAlert = useRef(false);
+
 	useEffect(() => {
 		const params = new URLSearchParams(location.search);
-		if (params.get('verified') === '1' && !hasShownToast.current) {
-			hasShownToast.current = true;
-			toast.success('メール認証が完了しました！', {
-				duration: 3000,
-				position: 'top-right',
-			});
+		if (params.get('verified') === '1' && !hasShownAlert.current) {
+			hasShownAlert.current = true;
+			alert('メール認証が完了しました！');
+
+			// 登録・ログイン時に保存したメールアドレスを削除
+			localStorage.removeItem('registerEmail');
+			localStorage.removeItem('pending_verification_email');
 		}
 	}, [location]);
 
@@ -44,7 +44,17 @@ export default function LoginForm({ isAdmin = false }) {
 			// 4. 成功時リダイレクト先を分岐
 			navigate(isAdmin ? '/admin/attendance/list' : '/attendance');
 		} catch (err) {
-			if (err.response?.status === 422) {
+			const status = err.response?.status;
+
+			if (!isAdmin && status === 403 && err.response?.data?.need_verification) {
+				// 一般ユーザーでメール未認証の場合
+				localStorage.setItem('pending_verification_email', email);
+				alert('メールアドレスの認証が完了していません。\n認証メールをご確認ください。');
+				navigate('/email/verify/notice');
+				return;
+			}
+
+			if (status === 422) {
 				setErrors(err.response.data.errors || {});
 			} else {
 				alert('サーバーエラーが発生しました');
@@ -54,7 +64,6 @@ export default function LoginForm({ isAdmin = false }) {
 
 	return (
 		<div className="auth-form">
-			<Toaster />
 			<h2 className="auth-form-heading">{isAdmin ? '管理者ログイン' : 'ログイン'}</h2>
 
 			<form className="auth-form-body" onSubmit={handleSubmit}>

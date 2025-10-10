@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../css/auth-form.css';
@@ -29,7 +29,8 @@ export default function Register() {
 				password_confirmation: passwordConfirmation,
 			});
 
-			// 成功時は勤怠登録画面へ遷移
+			localStorage.setItem('registerEmail', email);
+			setUser(null);
 			navigate('/email/verify/notice');
 		} catch (err) {
 			if (err.response?.status === 422) {

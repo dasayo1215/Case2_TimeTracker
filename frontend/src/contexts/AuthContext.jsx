@@ -15,26 +15,37 @@ export const AuthProvider = ({ children }) => {
 				await axios.get('/sanctum/csrf-cookie');
 
 				const pathname = window.location.pathname;
-
-				// 💡 まず admin 側を優先的に試す
 				let res;
-				try {
-					if (
-						pathname.startsWith('/admin') ||
-						pathname.startsWith('/stamp_correction_request')
-					) {
+
+				// まず admin 側を優先チェック
+				if (
+					pathname.startsWith('/admin') ||
+					pathname.startsWith('/stamp_correction_request')
+				) {
+					try {
 						res = await axios.get('/api/admin/user');
-					} else {
-						throw new Error('skip admin check');
+					} catch (adminError) {
+						// 管理者未ログインなら一般ユーザーで再試行
+						if (adminError.response?.status === 401) {
+							res = await axios.get('/api/user');
+						} else {
+							throw adminError;
+						}
 					}
-				} catch {
-					// adminセッションでなければ一般ユーザー用を試す
+				} else {
+					// 一般ユーザー側
 					res = await axios.get('/api/user');
 				}
 
 				setUser(res.data);
 			} catch (error) {
-				setUser(null);
+				// 未ログイン or セッション切れ → 明示的に user を null に
+				if (error.response?.status === 401) {
+					setUser(null);
+				} else {
+					console.error('ユーザー情報取得エラー:', error);
+					setUser(null);
+				}
 			} finally {
 				setLoading(false);
 			}

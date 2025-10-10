@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useSearchParams } from 'react-router-dom';
 import { FaRegCalendarAlt } from 'react-icons/fa';
@@ -20,7 +20,7 @@ export default function AttendanceListBase({
 
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	// ✅ 初回マウント時のみ、monthを今月に設定
+	// 初回マウント時のみ、monthを今月に設定
 	useEffect(() => {
 		if (!month) {
 			const today = new Date();
@@ -32,7 +32,7 @@ export default function AttendanceListBase({
 		}
 	}, []);
 
-	// ✅ monthが変わったとき、URLに反映（初期ロード時は除外）
+	// monthが変わったとき、URLに反映（初期ロード時は除外）
 	useEffect(() => {
 		if (!month) return;
 		const queryMonth = searchParams.get('month')?.replace('-', '/');
@@ -41,7 +41,7 @@ export default function AttendanceListBase({
 		}
 	}, [month]);
 
-	// ✅ クエリが変わったとき → 戻る／進む対応
+	// クエリが変わったとき → 戻る／進む対応
 	useEffect(() => {
 		const queryMonth = searchParams.get('month');
 		if (queryMonth) {
@@ -50,7 +50,7 @@ export default function AttendanceListBase({
 		}
 	}, [searchParams]);
 
-	// ✅ データ取得
+	// データ取得
 	useEffect(() => {
 		if (!month) return;
 		const fetchData = async () => {
@@ -70,7 +70,7 @@ export default function AttendanceListBase({
 		fetchData();
 	}, [month, apiEndpoint]);
 
-	// ✅ 表示用
+	// 表示用
 	const [y, m] = month ? month.split('/').map((v) => parseInt(v, 10)) : [null, null];
 	const getDaysInMonth = (year, month) => {
 		const lastDay = new Date(year, month, 0).getDate();

@@ -55,6 +55,38 @@ php artisan migrate:fresh --seed
 
 ## PHPUnit テストの実行方法（当プロジェクト用）
 
+### テスト実行手順
+
+#### 1. テスト用データベースを作成
+```bash
+docker-compose exec mysql bash
+mysql -u root -p
+
+#MySQLログイン後
+CREATE DATABASE demo_test;
+SHOW DATABASES;
+```
+
+#### 2. APP_KEY の生成
+```
+docker-compose exec php bash
+php artisan key:generate --env=testing
+php artisan config:clear
+
+```
+
+#### 3. テストの実行（すべてのテストを実行）
+```
+php artisan test --env=testing tests/Feature
+```
+
+### 補足事項
+- 当プロジェクトでは、テスト環境を .env.testing ファイルにより構築しています。
+- 各 Feature テストクラスで use RefreshDatabase; を使用しているため、テストごとに自動でマイグレーションが実行されます。
+- Seeder は各テスト内で必要なものだけを呼び出す構成です。
+- phpunit.xml は編集・使用しておらず、.env.testing の設定で環境を切り替えています。
+- 誤って .env の本番DBを使用しないよう注意してください。
+
 ## その他
 - 休憩時間は0回でも可とし、出勤から退勤まで休憩を登録しない勤務も可能としました。
 - 管理者は、一般ユーザーによる修正申請中（ステータス：pending）の勤怠データであっても修正可能としました。

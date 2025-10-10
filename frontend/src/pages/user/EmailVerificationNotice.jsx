@@ -1,29 +1,33 @@
-import React, { useState } from 'react';
 import axios from 'axios';
 import '../../css/email-verification.css';
 
 export default function EmailVerificationNotice() {
-	const [message, setMessage] = useState('');
+	const handleResend = async () => {
+		try {
+			await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
 
-    const handleResend = async () => {
-        try {
-            await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
+			// 登録時 or 直前ログイン時のメールアドレスを優先的に取得
+			const email =
+				localStorage.getItem('registerEmail') ||
+				localStorage.getItem('pending_verification_email');
 
-            // ローカルストレージなどから登録時メールアドレスを取得して送信
-            const email = localStorage.getItem('registerEmail');
+			if (!email) {
+				alert('メールアドレス情報が見つかりません。再度ログインをお試しください。');
+				return;
+			}
 
-            const res = await axios.post(
-                '/api/email/verification-notification',
-                { email },
-                { withCredentials: true }
-            );
+			await axios.post(
+				'/api/email/verification-notification',
+				{ email },
+				{ withCredentials: true }
+			);
 
-            alert('認証メールを再送しました！');
-        } catch (err) {
-            console.error('再送に失敗しました:', err);
-            alert('再送に失敗しました。もう一度お試しください。');
-        }
-    };
+			alert('認証メールを再送しました！');
+		} catch (err) {
+			console.error('再送に失敗しました:', err);
+			alert('再送に失敗しました。もう一度お試しください。');
+		}
+	};
 
 	return (
 		<div className="email-verify-content">

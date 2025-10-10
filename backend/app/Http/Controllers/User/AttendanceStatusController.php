@@ -14,13 +14,22 @@ class AttendanceStatusController extends Controller
         $user = Auth::user();
         $today = Carbon::today()->toDateString();
 
+        $datetime = now()
+            ->locale('ja')
+            ->isoFormat('YYYY年MM月DD日(ddd) HH:mm');
+
+
         $attendance = Attendance::where('user_id', $user->id)
             ->where('work_date', $today)
             ->with('breakTimes')
             ->first();
 
         if (!$attendance) {
-            return response()->json(['status' => '勤務外']);
+            return response()->json([
+                'datetime'   => $datetime,
+                'status'     => '勤務外',
+                'attendance' => null,
+            ]);
         }
 
         if ($attendance->clock_out) {
@@ -37,6 +46,7 @@ class AttendanceStatusController extends Controller
         }
 
         return response()->json([
+            'datetime'   => $datetime,
             'status' => $status,
             'attendance' => $attendance,
         ]);

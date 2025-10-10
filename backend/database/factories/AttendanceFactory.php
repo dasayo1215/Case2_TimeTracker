@@ -35,12 +35,12 @@ class AttendanceFactory extends Factory
         return [
             'user_id'      => User::factory(),
             'work_date'    => $this->faker->date(),
-            'clock_in'     => $this->faker->dateTime(),
-            'clock_out'    => $this->faker->dateTime(),
-            'remarks'      => $remarks,
-            'status'       => $status,
-            'submitted_at' => $submittedAt,
-            'approved_at'  => $approvedAt,
+            'clock_in'     => null,
+            'clock_out'    => null,
+            'remarks'      => null,
+            'status'       => 'normal',
+            'submitted_at' => null,
+            'approved_at'  => null,
         ];
     }
 }

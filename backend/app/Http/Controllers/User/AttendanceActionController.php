@@ -25,6 +25,11 @@ class AttendanceActionController extends Controller
 
         switch ($request->action) {
             case 'clock_in':
+                if (!empty($attendance->clock_in)) {
+                    return response()->json([
+                        'message' => '本日はすでに出勤済みです',
+                    ], 400);
+                }
                 $attendance->update(['clock_in' => $now->format('H:i:s')]);
                 break;
             case 'clock_out':

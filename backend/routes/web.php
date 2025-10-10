@@ -42,15 +42,26 @@ Route::post('/api/admin/logout', [AdminAuthController::class, 'logout']);
 
 // 現在ログイン中のユーザーを取得
 Route::get('/api/user', function () {
-    return response()->json(Auth::guard('web')->user());
+    $user = Auth::guard('web')->user();
+    if (!$user) {
+        return response()->json(null, 401);
+    }
+    if (!$user->hasVerifiedEmail()) {
+        return response()->json(['message' => 'メール未認証'], 403);
+    }
+    return response()->json($user);
 })->middleware(['web', 'auth:web']);
 
 Route::get('/api/admin/user', function () {
-    return response()->json(Auth::guard('admin')->user());
+    $user = Auth::guard('admin')->user();
+    if (!$user) {
+        return response()->json(null, 401);
+    }
+    return response()->json($user);
 })->middleware(['web', 'auth:admin']);
 
 // 勤怠API（一般ユーザー用）
-Route::middleware(['web', 'auth:web'])->group(function () {
+Route::middleware(['web', 'auth:web', 'verified'])->group(function () {
 
     // ---- 勤怠ステータス ----
     Route::get('/api/attendance/status', [UserAttendanceStatusController::class, 'getStatus']);

@@ -13,7 +13,7 @@ export default function ProtectedRoute({ children, allowedRoles = [] }) {
 	// AuthContextがまだ初期化中なら、何もリダイレクトせず待つ
 	if (loading) {
 		return (
-			<div style={{ textAlign: 'center', marginTop: '50px', color: '#555' }}>
+			<div style={{ textAlign: 'center', marginTop: '100px', color: '#555' }}>
 				認証情報を確認中です...
 			</div>
 		);

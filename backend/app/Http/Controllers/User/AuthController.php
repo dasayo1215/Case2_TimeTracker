@@ -60,11 +60,29 @@ class AuthController extends Controller
             return $this->loginFailedResponse();
         }
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
+        // 一般ユーザー以外は弾く
         if ($user->role !== 'user') {
             Auth::logout();
             return $this->loginFailedResponse();
+        }
+
+        // ★ メール未認証ならメールを再送して案内
+        if (!$user->hasVerifiedEmail()) {
+            // セッションは破棄しておく
+            Auth::logout();
+
+            // 再送
+            $user->sendEmailVerificationNotification();
+
+            return response()->json([
+                'errors' => [
+                    'email' => ['メールアドレスの認証が完了していません。認証メールを再送しました。']
+                ],
+                'need_verification' => true,
+            ], 403);
         }
 
         $request->session()->regenerate();
