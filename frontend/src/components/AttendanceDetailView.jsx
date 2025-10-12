@@ -64,7 +64,7 @@ export default function AttendanceDetailView({ id, apiBase, mode = 'normal' }) {
 						clock_in: toHHMM(data?.clock_in),
 						clock_out: toHHMM(data?.clock_out),
 						remarks: data?.remarks ?? '',
-						breakTimes: (data?.breakTimes ?? []).map((b) => ({
+						breakTimes: (data?.break_times ?? []).map((b) => ({
 							break_start: toHHMM(b?.break_start),
 							break_end: toHHMM(b?.break_end),
 						})),

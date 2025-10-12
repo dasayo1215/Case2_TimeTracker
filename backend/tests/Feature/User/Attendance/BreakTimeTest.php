@@ -48,7 +48,7 @@ class BreakTimeTest extends UserTestCase
             'clock_in'  => Carbon::now()->subHours(3),
         ]);
 
-        // 出勤状態をAPI的に明示（内部ロジック整合のため）
+        // 出勤状態をAPI的に明示
         $this->postJsonAsUser('/api/attendance/clock', ['action' => 'clock_in']);
 
         // 2. 休憩入と休憩戻を実施

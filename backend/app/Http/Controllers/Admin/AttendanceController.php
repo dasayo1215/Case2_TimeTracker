@@ -67,7 +67,7 @@ class AttendanceController extends Controller
             'clock_in'   => $attendance->clock_in,
             'clock_out'  => $attendance->clock_out,
             'remarks'    => $attendance->remarks,
-            'breakTimes' => $attendance->breakTimes->map(fn($b) => [
+            'break_times' => $attendance->breakTimes->map(fn($b) => [
                 'break_start' => $b->break_start,
                 'break_end'   => $b->break_end,
             ]),

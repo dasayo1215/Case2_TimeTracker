@@ -37,10 +37,10 @@ class AttendanceFactory extends Factory
             'work_date'    => $this->faker->date(),
             'clock_in'     => null,
             'clock_out'    => null,
-            'remarks'      => null,
-            'status'       => 'normal',
-            'submitted_at' => null,
-            'approved_at'  => null,
+            'remarks'      => $remarks,
+            'status'       => $status,
+            'submitted_at' => $submittedAt,
+            'approved_at'  => $approvedAt,
         ];
     }
 }

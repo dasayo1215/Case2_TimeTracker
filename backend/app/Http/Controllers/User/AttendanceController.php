@@ -40,6 +40,7 @@ class AttendanceController extends Controller
             });
 
             return [
+                'user_id' => $a->user_id,
                 'id' => $a->id,
                 'date' => $a->work_date,
                 'clock_in' => $a->clock_in,
@@ -52,6 +53,7 @@ class AttendanceController extends Controller
         });
 
         return response()->json([
+            'month'   => date('Y/m', strtotime($start)),
             'records' => $records,
         ]);
     }
@@ -69,12 +71,13 @@ class AttendanceController extends Controller
         }
 
         return response()->json([
+            'id'         => $attendance->id,
             'user_name'  => $attendance->user->name,
             'date'       => $attendance->work_date,
             'clock_in'   => $attendance->clock_in,
             'clock_out'  => $attendance->clock_out,
             'remarks'    => $attendance->remarks,
-            'breakTimes' => $attendance->breakTimes->map(fn ($b) => [
+            'break_times' => $attendance->breakTimes->map(fn ($b) => [
                 'break_start' => $b->break_start,
                 'break_end'   => $b->break_end,
             ]),
