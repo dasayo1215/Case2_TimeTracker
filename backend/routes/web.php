@@ -75,7 +75,7 @@ Route::middleware(['web', 'auth:web', 'verified'])->group(function () {
     // ---- 打刻・修正など操作系 ----
     Route::post('/api/attendance/clock', [UserAttendanceActionController::class, 'clock']);
     Route::post('/api/attendance/update-or-create/{id}', [UserAttendanceActionController::class, 'updateOrCreate'])
-        ->where('id', '[0-9]+|new');
+        ->whereNumber('id');
 });
 
 // 勤怠API（管理者用）

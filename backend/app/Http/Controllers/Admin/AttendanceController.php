@@ -146,9 +146,9 @@ class AttendanceController extends Controller
             $query->where('status', 'approved');
         }
 
-        return response()->json(
-            $query->orderBy('submitted_at', 'desc')->get()
-        );
+        return response()->json([
+            'records' => $query->orderBy('submitted_at', 'desc')->get(),
+        ]);
     }
 
     public function exportCsv(Request $request, $id)

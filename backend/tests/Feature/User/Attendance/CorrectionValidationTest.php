@@ -17,8 +17,10 @@ class CorrectionValidationTest extends UserTestCase
             'work_date' => Carbon::today()->toDateString(),
             'clock_in'  => '09:00:00',
             'clock_out' => '18:00:00',
-            'remarks'   => 'テスト用データ',
-            'status'    => 'completed',
+            'remarks'   => null,
+            'status'    => 'normal',
+            'submitted_at' => null,
+            'approved_at' =>null,
         ]);
 
         // 2. 勤怠詳細ページを開く（＝対象データを指定）
@@ -30,15 +32,15 @@ class CorrectionValidationTest extends UserTestCase
         ];
 
         // 4. 保存処理をする
-        $response = $this->postJsonAsUser('/api/attendance/detail/' . $attendance->id, $payload);
+        $response = $this->postJsonAsUser('/api/attendance/update-or-create/' . $attendance->id, $payload);
         $response->assertStatus(422);
 
         // 「出勤時間が不適切な値です」というバリデーションメッセージが表示される
         $response->assertJsonValidationErrors(['clock_in']);
         $this->assertStringContainsString(
-            '出勤時間が不適切な値です',
+            '出勤時間もしくは退勤時間が不適切な値です',
             $response->json('errors.clock_in.0') ?? '',
-            '「出勤時間が不適切な値です」というエラーメッセージが表示されていません'
+            '「出勤時間もしくは退勤時間が不適切な値です」というエラーメッセージが表示されていません'
         );
     }
 
@@ -51,29 +53,32 @@ class CorrectionValidationTest extends UserTestCase
             'work_date' => Carbon::today()->toDateString(),
             'clock_in'  => '09:00:00',
             'clock_out' => '18:00:00',
-            'remarks'   => 'テストデータ',
-            'status'    => 'completed',
+            'remarks'   => null,
+            'status'    => 'normal',
+            'submitted_at' => null,
+            'approved_at' =>null,
         ]);
 
         // 2. 勤怠詳細ページを開く → 3. 休憩開始を退勤時間より後に設定する
         $payload = [
+            'date' => Carbon::today()->toDateString(),
             'clock_in'  => '09:00:00',
             'clock_out' => '18:00:00',
-            'break_times' => [
+            'breakTimes' => [
                 ['break_start' => '19:00:00', 'break_end' => '19:30:00'],
             ],
             'remarks' => 'テスト修正',
         ];
 
         // 4. 保存処理をする
-        $response = $this->postJsonAsUser('/api/attendance/detail/' . $attendance->id, $payload);
+        $response = $this->postJsonAsUser('/api/attendance/update-or-create/' . $attendance->id, $payload);
         $response->assertStatus(422);
 
         // 「休憩時間が不適切な値です」というバリデーションメッセージが表示される
-        $response->assertJsonValidationErrors(['break_times.0.break_start']);
+        $response->assertJsonValidationErrors(['breakTimes']);
         $this->assertStringContainsString(
             '休憩時間が不適切な値です',
-            $response->json('errors.break_times.0.break_start.0') ?? '',
+            implode('', $response->json('errors.breakTimes') ?? []),
             '「休憩時間が不適切な値です」というエラーメッセージが表示されていません'
         );
     }
@@ -87,29 +92,32 @@ class CorrectionValidationTest extends UserTestCase
             'work_date' => Carbon::today()->toDateString(),
             'clock_in'  => '09:00:00',
             'clock_out' => '18:00:00',
-            'remarks'   => 'テストデータ',
-            'status'    => 'completed',
+            'remarks'   => null,
+            'status'    => 'normal',
+            'submitted_at' => null,
+            'approved_at' =>null,
         ]);
 
         // 2. 勤怠詳細ページを開く → 3. 休憩終了を退勤時間より後に設定する
         $payload = [
+            'date' => Carbon::today()->toDateString(),
             'clock_in'  => '09:00:00',
             'clock_out' => '18:00:00',
-            'break_times' => [
+            'breakTimes' => [
                 ['break_start' => '17:00:00', 'break_end' => '19:00:00'],
             ],
             'remarks' => 'テスト修正',
         ];
 
         // 4. 保存処理をする
-        $response = $this->postJsonAsUser('/api/attendance/detail/' . $attendance->id, $payload);
+        $response = $this->postJsonAsUser('/api/attendance/update-or-create/' . $attendance->id, $payload);
         $response->assertStatus(422);
 
         // 「休憩時間もしくは退勤時間が不適切な値です」というバリデーションメッセージが表示される
-        $response->assertJsonValidationErrors(['break_times.0.break_end']);
+        $response->assertJsonValidationErrors(['breakTimes']);
         $this->assertStringContainsString(
             '休憩時間もしくは退勤時間が不適切な値です',
-            $response->json('errors.break_times.0.break_end.0') ?? '',
+            implode('', $response->json('errors.breakTimes') ?? []),
             '「休憩時間もしくは退勤時間が不適切な値です」というエラーメッセージが表示されていません'
         );
     }
@@ -123,8 +131,10 @@ class CorrectionValidationTest extends UserTestCase
             'work_date' => Carbon::today()->toDateString(),
             'clock_in'  => '09:00:00',
             'clock_out' => '18:00:00',
-            'remarks'   => '既存データ',
-            'status'    => 'completed',
+            'remarks'   => null,
+            'status'    => 'normal',
+            'submitted_at' => null,
+            'approved_at' =>null,
         ]);
 
         // 2. 勤怠詳細ページを開く → 3. 備考欄を未入力にする
@@ -135,7 +145,7 @@ class CorrectionValidationTest extends UserTestCase
         ];
 
         // 4. 保存処理をする
-        $response = $this->postJsonAsUser('/api/attendance/detail/' . $attendance->id, $payload);
+        $response = $this->postJsonAsUser('/api/attendance/update-or-create/' . $attendance->id, $payload);
         $response->assertStatus(422);
 
         // 「備考を記入してください」というバリデーションメッセージが表示される
