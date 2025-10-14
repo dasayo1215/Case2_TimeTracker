@@ -53,7 +53,32 @@ php artisan migrate:fresh --seed
 - MailHog UI：http://localhost:8025/
 ※ローカル環境で送信された認証メールや通知メールを確認できます。
 
-## PHPUnit テストの実行方法（当プロジェクト用）
+## PHPUnit テスト（当プロジェクト用）
+
+### テスト範囲について
+- 本課題は本来、Laravel（Blade）を用いたサーバーサイドレンダリング構成を前提としており、画面操作を含めた動作確認も PHPUnit の Feature テストで完結させる想定です。
+- しかし本プロジェクトでは、フロントエンドを React による SPA（Single Page Application）として実装しているため、UI操作や画面遷移などの動作は PHPUnit のテスト範囲外となります。
+- そのため、Laravel 側では API レスポンスおよびデータベース処理を中心に検証し、React 側のボタン操作・ページ遷移・表示更新などの挙動はブラウザ上で別途確認しています。
+
+### テストIDとテストファイル対応表
+|ID|項目|	対応テストファイル|
+|---|---|---|
+|1|	認証機能（一般ユーザー）|	User/Auth/RegisterTest.php|
+|2|	ログイン認証機能（一般ユーザー）|	User/Auth/LoginTest.php|
+|3|	ログイン認証機能（管理者）|	Admin/Auth/LoginTest.php|
+|4|	日時取得機能|	User/Attendance/StatusTest.php|
+|5|	ステータス確認機能|	User/Attendance/StatusTest.php|
+|6|	出勤機能|	User/Attendance/ClockInTest.php|
+|7|	休憩機能|	User/Attendance/BreakTimeTest.php|
+|8|	退勤機能|	User/Attendance/ClockOutTest.php|
+|9|	勤怠一覧情報取得機能（一般ユーザー）|	User/Attendance/ListTest.php|
+|10|	勤怠詳細情報取得機能（一般ユーザー）|	User/Attendance/DetailTest.php|
+|11|勤怠詳細情報修正機能（一般ユーザー）|	User/Attendance/CorrectionValidationTest.php, CorrectionRequestTest.php|
+|12|	勤怠一覧情報取得機能（管理者）|	Admin/Attendance/ListTest.php|
+|13|	勤怠詳細情報取得・修正機能（管理者）|	Admin/Attendance/DetailTest.php|
+|14|	ユーザー情報取得機能（管理者）|	Admin/Staff/ListTest.php|
+|15|	勤怠情報修正承認機能（管理者）|	Admin/Attendance/ApprovalTest.php|
+|16|	メール認証機能（応用）|	User/EmailVerificationTest.php|
 
 ### テスト実行手順
 
