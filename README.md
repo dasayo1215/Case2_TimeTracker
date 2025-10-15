@@ -146,5 +146,31 @@ MAIL_ENCRYPTION=null
 - シーディングでは現在 10人のユーザー を作成しますが、将来的に1,000人規模のユーザー数を想定し、テストにてそのパフォーマンス確認も実施済みです。シーディングにおけるユーザー数の変更は、.env内の「SEED_USER_COUNT=」で指定可能です（指定しない場合、デフォルトは10人）。
 
 ## ER図
+<img width="701" height="361" alt="case2 drawio" src="https://github.com/user-attachments/assets/56a3827d-1fbd-446f-ba04-ab74518c2e70" />
+
 
 ## 画面例
+### 一般ユーザー向け画面
+<img width="1577" height="1138" alt="スクリーンショット 2025-10-15 193420" src="https://github.com/user-attachments/assets/88531156-50c0-4652-980b-f541b4306b1a" />
+<img width="1578" height="1130" alt="スクリーンショット 2025-10-15 193432" src="https://github.com/user-attachments/assets/29670353-a038-477c-bc18-84851b967959" />
+<img width="1577" height="1126" alt="スクリーンショット 2025-10-15 193500" src="https://github.com/user-attachments/assets/61f0d4b6-f4c2-4a32-8105-675d21f1e149" />
+<img width="1576" height="1135" alt="スクリーンショット 2025-10-15 193545" src="https://github.com/user-attachments/assets/792cf291-4118-4d02-9a45-46f13a9b4954" />
+<img width="1574" height="1133" alt="スクリーンショット 2025-10-15 193554" src="https://github.com/user-attachments/assets/cac9be39-5967-4629-a37b-a39f78c24090" />
+<img width="1584" height="1137" alt="スクリーンショット 2025-10-15 193600" src="https://github.com/user-attachments/assets/fa889a5b-3b62-48e7-87ed-12041922cbc5" />
+<img width="1577" height="1132" alt="スクリーンショット 2025-10-15 193630" src="https://github.com/user-attachments/assets/8829fb64-60eb-44d9-aaaa-a56b294c5f08" />
+<img width="1576" height="1131" alt="スクリーンショット 2025-10-15 193640" src="https://github.com/user-attachments/assets/cfb556d9-8b38-40c3-86e8-c0fcc9438b1b" />
+<img width="1579" height="1128" alt="スクリーンショット 2025-10-15 193650" src="https://github.com/user-attachments/assets/97ce50dd-74ae-4bd3-9296-fca77488f1af" />
+<img width="1574" height="1134" alt="スクリーンショット 2025-10-15 193720" src="https://github.com/user-attachments/assets/737d20c1-83fd-4c20-8570-58955ca5324c" />
+<img width="1577" height="1128" alt="スクリーンショット 2025-10-15 193729" src="https://github.com/user-attachments/assets/7d97fca7-f821-4069-87ce-14303f88a84c" />
+
+### 管理者向け画面
+<img width="1572" height="1130" alt="スクリーンショット 2025-10-15 193801" src="https://github.com/user-attachments/assets/67e47cae-f020-43ad-8a14-1ea1dd169eb3" />
+<img width="1574" height="1136" alt="スクリーンショット 2025-10-15 193815" src="https://github.com/user-attachments/assets/ab20512e-5b41-42be-a014-7f776d5247e4" />
+<img width="1573" height="1124" alt="スクリーンショット 2025-10-15 193830" src="https://github.com/user-attachments/assets/673632b7-d6ea-4d53-933a-9c2f457810d7" />
+<img width="1576" height="1137" alt="スクリーンショット 2025-10-15 193849" src="https://github.com/user-attachments/assets/6ef03a10-78aa-4807-89a2-6fc559c8c0e5" />
+<img width="1579" height="1130" alt="スクリーンショット 2025-10-15 193858" src="https://github.com/user-attachments/assets/8d1790e5-3f5a-4ede-8cea-d02d214a468f" />
+<img width="1573" height="1132" alt="スクリーンショット 2025-10-15 193906" src="https://github.com/user-attachments/assets/573f666c-e7a1-449c-9206-89326a94b415" />
+<img width="1572" height="1123" alt="スクリーンショット 2025-10-15 193919" src="https://github.com/user-attachments/assets/15f83435-cbb5-4584-bd11-4bacf2e1b1f5" />
+<img width="1575" height="1121" alt="スクリーンショット 2025-10-15 193955" src="https://github.com/user-attachments/assets/d1e3c854-63cb-4905-892b-9c7811c2132a" />
+<img width="1573" height="1123" alt="スクリーンショット 2025-10-15 194033" src="https://github.com/user-attachments/assets/d9298ea4-547c-4679-8d08-eddafdc7a2c2" />
+<img width="1576" height="1123" alt="スクリーンショット 2025-10-15 194040" src="https://github.com/user-attachments/assets/a15fd243-c458-4089-8a83-92233b8bd752" />
