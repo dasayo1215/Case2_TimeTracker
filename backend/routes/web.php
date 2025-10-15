@@ -104,6 +104,6 @@ Route::prefix('api/admin')
 });
 
 // React SPA 用ルート
-Route::get('/{any}', function () {
-    return file_get_contents(public_path('index.html'));
-})->where('any', '.*');
+// Route::get('/{any}', function () {
+//     return file_get_contents(public_path('index.html'));
+// })->where('any', '.*');

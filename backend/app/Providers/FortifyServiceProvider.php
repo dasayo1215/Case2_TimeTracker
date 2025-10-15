@@ -15,7 +15,6 @@ class FortifyServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // ✅ 登録段階で無効化（ルート登録前に確実に止める）
         Fortify::ignoreRoutes();
         config(['fortify.views' => false]);
 
@@ -24,7 +23,6 @@ class FortifyServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // 念のためboot時にも
         Fortify::ignoreRoutes();
         config(['fortify.views' => false]);
 
