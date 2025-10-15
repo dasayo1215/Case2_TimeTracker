@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../axios';
 import '../css/attendance-detail.css';
 
 export default function AttendanceDetailView({ id, apiBase, mode = 'normal' }) {

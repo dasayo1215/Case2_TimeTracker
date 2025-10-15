@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Admin\Staff;
+namespace Tests\Feature\Admin\Attendance;
 
 use Tests\Feature\Admin\AdminTestCase;
 use App\Models\User;

@@ -91,7 +91,7 @@
 
 /* 入力パーツ */
 .detail-input {
-	width: 70px;
+	width: 120px;
 	padding: 6px 10px;
 	font-size: 15px;
 	border: 1px solid #ccc;
@@ -128,7 +128,7 @@
 	font-size: 14px;
 	color: #333;
 	background: #fff;
-	flex: 1;                /* ←ここを追加（残り幅いっぱいに） */
+	flex: 1;
 	height: 60px;
 	resize: none;
 	box-sizing: border-box;
@@ -196,7 +196,7 @@
 
 .time-grid {
 	display: grid;
-	grid-template-columns: 72px 24px 72px; /* 左時刻 | 〜 | 右時刻 */
+	grid-template-columns: 122px 24px 122px; /* 左時刻 | 〜 | 右時刻 */
 	align-items: center;
 	column-gap: 8px;
 }

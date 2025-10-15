@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../axios';
 import logo from '/logo.svg';
 import { useAuth } from '../../contexts/AuthContext';
 

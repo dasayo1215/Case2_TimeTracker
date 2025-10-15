@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../../axios';
 import '../../css/email-verification.css';
 
 export default function EmailVerificationNotice() {

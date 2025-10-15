@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../axios';
 import { Link, useSearchParams } from 'react-router-dom';
 import '../css/list-page.css';
 
@@ -15,7 +15,7 @@ export default function RequestListBase({ apiEndpoint, detailPathBase, title }) 
 				setLoading(true);
 				await axios.get('/sanctum/csrf-cookie');
 				const res = await axios.get(`${apiEndpoint}?status=${activeTab}`);
-				setRecords(res.data);
+				setRecords(Array.isArray(res.data.records) ? res.data.records : []);
 			} catch (error) {
 				console.error('申請一覧の取得に失敗しました:', error);
 			} finally {

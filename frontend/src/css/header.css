@@ -14,7 +14,6 @@
 .header-wrapper {
     width: 100%;
     max-width: 1540px;
-    /* min-width: 1400px;   開発中これより小さい画面で見るのでコメントアウト */
     height: 100%;
     padding: 0 20px;
     box-sizing: border-box;
@@ -67,25 +66,36 @@
     justify-content: center;
 }
 
-.header-nav-link {
+.header-nav-link,
+.header-nav-button {
     text-decoration: none;
     color: white;
     font-size: 14px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.header-nav-link {
+    font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+    font-weight: 400;
+    color: white;
+    text-decoration: none;
+}
+
+.header-nav-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
 }
 
 .header-nav-link:hover {
     text-decoration: underline;
 }
 
-.header-nav-button {
-    background-color: transparent; /* 背景を透明に */
-    color: white; /* 文字色を白に */
-    border: none; /* ボーダーを削除 */
-    font-size: 14px; /* フォントサイズ */
-    padding: 0; /* パディングを調整 */
-    cursor: pointer; /* カーソルをポインターに */
-}
-
 .header-nav-button:hover {
-    text-decoration: underline; /* ホバー時に下線 */
+    text-decoration: underline;
 }

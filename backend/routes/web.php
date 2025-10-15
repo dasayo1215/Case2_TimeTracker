@@ -102,3 +102,8 @@ Route::prefix('api/admin')
     // ---- スタッフ関連 ----
     Route::get('/staff/list', [AdminStaffController::class, 'getList']);
 });
+
+// React SPA 用ルート
+Route::get('/{any}', function () {
+    return file_get_contents(public_path('index.html'));
+})->where('any', '.*');
