@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Attendance;
 use App\Models\BreakTime;
 use App\Http\Requests\AttendanceRequest;
-use Carbon\Carbon;
 
 class AttendanceActionController extends Controller
 {
@@ -39,9 +37,9 @@ class AttendanceActionController extends Controller
             'clock_in'     => $clockIn,
             'clock_out'    => $clockOut,
             'remarks'      => $remarks,
-            'status'       => 'approved',   // 修正後は必ず approved に統一
+            'status'       => 'approved',   // 修正後はapprovedに統一
             'submitted_at' => now(),
-            'approved_at'  => now(),        // 再承認扱い
+            'approved_at'  => now(),
         ]);
 
         // 休憩時間を再登録

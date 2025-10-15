@@ -62,26 +62,26 @@ class AttendanceRequest extends FormRequest
                 'remarks'    => [],
             ];
 
-            // --- 1. 出勤時間 > 退勤時間 or 同時（ゼロ時間もNG） ---
-            if ($clockIn && $clockOut && strtotime($clockIn) >= strtotime($clockOut)) {
+            // --- 1. 出勤時間 > 退勤時間（ゼロはOKにする） ---
+            if ($clockIn && $clockOut && strtotime($clockIn) > strtotime($clockOut)) {
                 $messages['clock_in'][] = '出勤時間もしくは退勤時間が不適切な値です';
             }
 
-            // --- 2. 休憩開始が 出勤より前 または 退勤より後 ---
+            // --- 2. 休憩開始が 出勤より前 or 退勤より後（イコールはOK） ---
             foreach ($breaks as $b) {
                 if (!empty($b['break_start'])) {
-                    if ($clockIn && strtotime($b['break_start']) <= strtotime($clockIn)) {
+                    if ($clockIn && strtotime($b['break_start']) < strtotime($clockIn)) {
                         $messages['breakTimes'][] = '休憩時間が不適切な値です';
                     }
-                    if ($clockOut && strtotime($b['break_start']) >= strtotime($clockOut)) {
+                    if ($clockOut && strtotime($b['break_start']) > strtotime($clockOut)) {
                         $messages['breakTimes'][] = '休憩時間が不適切な値です';
                     }
                 }
             }
 
-            // --- 3. 休憩終了が退勤より後 または退勤と同時 ---
+            // --- 3. 休憩終了が退勤より後（イコールはOK） ---
             foreach ($breaks as $b) {
-                if (!empty($b['break_end']) && $clockOut && strtotime($b['break_end']) >= strtotime($clockOut)) {
+                if (!empty($b['break_end']) && $clockOut && strtotime($b['break_end']) > strtotime($clockOut)) {
                     $messages['breakTimes'][] = '休憩時間もしくは退勤時間が不適切な値です';
                 }
             }
