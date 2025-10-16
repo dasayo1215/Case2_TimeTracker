@@ -6,6 +6,7 @@ README
 - backend/routes/web.phpの最後のRoute（ngrok利用の時に使用、localhostで動かす場合はコメントアウトして使用しない）
 - backend/bootstrap/app.phpのコメント部分（ngrok利用時とlocalhost利用時で使うコードが違う）
 - .env.preview
+- frontend/axios.jsにもngrokのための記載あり（ngrok利用時とlocalhost利用時で修正必要なし）
 
 # アプリケーション名
 
