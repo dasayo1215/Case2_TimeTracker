@@ -1,5 +1,12 @@
 README
 
+# 本ブランチは、ngrok利用の備忘録として。
+下記ファイルを利用、一部コードのON・OFFをしながらngrokを利用した。
+- Makefileのpreview
+- backend/routes/web.phpの最後のRoute（ngrok利用の時に使用、localhostで動かす場合はコメントアウトして使用しない）
+- backend/bootstrap/app.phpのコメント部分（ngrok利用時とlocalhost利用時で使うコードが違う）
+- .env.preview
+
 # アプリケーション名
 
 coachtech 勤怠管理アプリ
