@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -105,8 +104,3 @@ Route::prefix('api/admin')
     Route::get('/attendance/staff/{id}/export', [AttendanceExportController::class, 'exportCsv'])
         ->whereNumber('id');
 });
-
-// React SPA 用ルート
-Route::get('/{any}', function () {
-    return file_get_contents(public_path('index.html'));
-})->where('any', '.*');

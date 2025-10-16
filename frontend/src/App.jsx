@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { useAuth } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import GuestRoute from './components/GuestRoute';
 
@@ -23,7 +23,6 @@ import StaffList from './pages/admin/StaffList';
 import StaffAttendanceList from './pages/admin/StaffAttendanceList';
 import RequestApprove from './pages/admin/RequestApprove';
 
-// 共通の申請一覧切替コンポーネント
 import RequestListSelector from './pages/RequestListSelector';
 
 /**
@@ -177,11 +176,9 @@ function Layout() {
  */
 function App() {
 	return (
-		<AuthProvider>
-			<BrowserRouter>
-				<Layout />
-			</BrowserRouter>
-		</AuthProvider>
+		<BrowserRouter>
+			<Layout />
+		</BrowserRouter>
 	);
 }
 

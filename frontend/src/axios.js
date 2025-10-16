@@ -2,15 +2,10 @@ import axios from 'axios';
 
 axios.defaults.withCredentials = true;
 
-// ローカル or ngrok 自動判定
-const apiBase = window.location.origin.includes('ngrok-free.app')
-	? window.location.origin
-	: 'http://localhost';
+// ベースURL（ローカル開発用）
+axios.defaults.baseURL = 'http://localhost';
 
-// ✅ ベースURLはドメインまで（/apiは付けない！）
-axios.defaults.baseURL = `${apiBase}`;
-
-// ✅ CSRFトークンを自動でヘッダーに付与
+// CSRFトークンを自動でヘッダーに付与
 axios.interceptors.request.use((config) => {
 	const xsrfToken = getCookieValue('XSRF-TOKEN');
 	if (xsrfToken) {
@@ -25,7 +20,7 @@ function getCookieValue(name) {
 	if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-// ✅ Sanctum用
+// Sanctum用
 export async function getCsrfCookie() {
 	return axios.get('/sanctum/csrf-cookie', { withCredentials: true });
 }

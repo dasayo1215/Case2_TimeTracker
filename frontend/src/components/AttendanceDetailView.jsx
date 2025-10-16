@@ -70,6 +70,15 @@ export default function AttendanceDetailView({ id, apiBase, mode = 'normal' }) {
 						})),
 						status: data?.status ?? 'normal',
 					});
+
+					// URLにmonthクエリを追加（履歴を汚さず置換）
+					const date = data?.date ?? data?.work_date;
+					if (date) {
+						const month = date.slice(0, 7); // "YYYY-MM"
+						const url = new URL(window.location);
+						url.searchParams.set('month', month);
+						window.history.replaceState({}, '', url);
+					}
 				} else {
 					setRecord(null);
 					return;

@@ -30,7 +30,7 @@ services:
         ports:
             - "3306:3306"
         volumes:
-            - ./docker/mysql/data:/var/lib/mysql
+            - mysql_data:/var/lib/mysql
             - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
 
     phpmyadmin:
@@ -51,3 +51,6 @@ services:
         ports:
             - "8025:8025"
             - "1025:1025"
+
+volumes:
+    mysql_data:

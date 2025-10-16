@@ -40,14 +40,30 @@ make setup
 - 管理者ユーザー
   - Email: `admin@example.com`
   - Password: `admin1234`
-- 一般ユーザー数は `.env` の `SEED_USER_COUNT` で設定可能です（デフォルト: 10）
+- 一般ユーザー
+  - Email: `user@example.com`
+  - Password: `user1234`
+- ランダム一般ユーザー
+  - 上記の固定ユーザーに加えて、`.env` の `SEED_USER_COUNT` で指定した数の一般ユーザーをランダムに生成します（デフォルト: 10）。
   - 例: `SEED_USER_COUNT=1000` とすると1000人分のデータが生成されます。
 
-開発中にデータベースをリセットしたい場合は以下を実行してください：
+### 開発中のデータベースリセットについて
 
+#### テーブルのみ再作成
+アプリケーションのテーブル構造をリセットしたい場合は以下を実行します。
 ```bash
-php artisan migrate:fresh --seed
+docker-compose exec php php artisan migrate:fresh --seed
 ```
+
+#### MySQLデータ削除を伴う完全リセット
+MySQLのデータボリュームを含めて完全にリセットしたい場合は以下を実行します。
+```bash
+docker-compose down -v
+docker-compose up -d
+docker-compose exec php php artisan migrate --seed
+```
+※ このプロジェクトの MySQL データは named volume (mysql_data) で管理されているため、
+docker-compose down -v で安全にデータを初期化できます。
 
 ## URL
 - 開発環境 (React SPA)：http://localhost:5173/
