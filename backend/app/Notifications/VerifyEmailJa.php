@@ -26,7 +26,7 @@ class VerifyEmailJa extends BaseVerifyEmail
     }
 
     /**
-     * 認証リンクの生成（標準のままでOK）
+     * 認証リンクの生成
      */
     protected function verificationUrl($notifiable)
     {

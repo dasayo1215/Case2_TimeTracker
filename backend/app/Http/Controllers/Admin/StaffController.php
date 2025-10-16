@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
 
 class StaffController extends Controller
 {
-    public function getList(Request $request)
+    public function getList()
     {
         $users = User::where('role', 'user')
             ->orderBy('id')

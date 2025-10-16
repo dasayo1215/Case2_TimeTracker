@@ -22,19 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         // ngrokやる前の設定
-        $middleware->group('web', [
-            EnsureFrontendRequestsAreStateful::class,
-            AddQueuedCookiesToResponse::class,
-            StartSession::class,
-            ShareErrorsFromSession::class,
-            VerifyCsrfToken::class,
-            SubstituteBindings::class,
-        ]);
-
-        $middleware->append(HandleCors::class);
-
-        // ngrokの時の設定
-        // $middleware->web(append: [
+        // $middleware->group('web', [
         //     EnsureFrontendRequestsAreStateful::class,
         //     AddQueuedCookiesToResponse::class,
         //     StartSession::class,
@@ -44,6 +32,18 @@ return Application::configure(basePath: dirname(__DIR__))
         // ]);
 
         // $middleware->append(HandleCors::class);
+
+        // ngrokの時の設定
+        $middleware->web(append: [
+            EnsureFrontendRequestsAreStateful::class,
+            AddQueuedCookiesToResponse::class,
+            StartSession::class,
+            ShareErrorsFromSession::class,
+            VerifyCsrfToken::class,
+            SubstituteBindings::class,
+        ]);
+
+        $middleware->append(HandleCors::class);
 
     })
     ->withExceptions(function (Exceptions $exceptions): void {

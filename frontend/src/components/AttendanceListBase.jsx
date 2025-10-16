@@ -109,16 +109,22 @@ export default function AttendanceListBase({
 			const res = await axios.get(`${apiEndpoint}/export${param}`, {
 				responseType: 'blob',
 			});
+
+			let filename = '勤怠.csv';
+			const disposition = res.headers['content-disposition'];
+			if (disposition) {
+				const match =
+					disposition.match(/filename\*=(?:UTF-8''|)([^;]+)/i) ||
+					disposition.match(/filename="?([^"]+)"?/i);
+				if (match && match[1]) {
+					filename = decodeURIComponent(match[1].trim().replace(/['"]/g, ''));
+				}
+			}
+
 			const blob = new Blob([res.data], { type: 'text/csv;charset=utf-8;' });
 			const url = window.URL.createObjectURL(blob);
 			const link = document.createElement('a');
 			link.href = url;
-			let filename = '勤怠.csv';
-			const disposition = res.headers['content-disposition'];
-			if (disposition) {
-				const match = disposition.match(/filename\*?=['"]?UTF-8''?([^;"']+)/i);
-				if (match) filename = decodeURIComponent(match[1]);
-			}
 			link.download = filename;
 			document.body.appendChild(link);
 			link.click();

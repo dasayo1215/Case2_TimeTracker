@@ -31,7 +31,7 @@ class CorrectionRequestTest extends UserTestCase
             'clock_out' => '18:15:00',
             'remarks'   => '修正申請テスト',
         ];
-        $response = $this->postJsonAsUser('/api/attendance/update-or-create/' . $attendance->id, $payload);
+        $response = $this->postJsonAsUser('/api/attendance/update-or-create/', $payload);
         $response->assertStatus(200);
 
         // 3-1. 管理者ユーザーで申請一覧画面を確認する
@@ -79,7 +79,7 @@ class CorrectionRequestTest extends UserTestCase
             'clock_out' => '18:10:00',
             'remarks'   => '申請テスト',
         ];
-        $this->postJsonAsUser('/api/attendance/update-or-create/' . $attendance->id, $payload);
+        $this->postJsonAsUser('/api/attendance/update-or-create/', $payload);
 
         // 3. 申請一覧画面を確認する
         $response = $this->getJsonAsUser('/api/attendance/requests?status=pending');
@@ -114,7 +114,7 @@ class CorrectionRequestTest extends UserTestCase
         'clock_out'  => '18:20:00',
         'remarks'    => '承認申請テスト',
     ];
-    $this->postJsonAsUser('/api/attendance/update-or-create/' . $attendance->id, $payload);
+    $this->postJsonAsUser('/api/attendance/update-or-create/', $payload);
 
     // 管理者が承認処理を実行
     $admin = User::factory()->create(['role' => 'admin']);
@@ -157,7 +157,7 @@ class CorrectionRequestTest extends UserTestCase
             'clock_out' => '18:15:00',
             'remarks'   => '詳細確認用',
         ];
-        $this->postJsonAsUser('/api/attendance/update-or-create/' . $attendance->id, $payload);
+        $this->postJsonAsUser('/api/attendance/update-or-create/', $payload);
 
         // 3. 申請一覧画面を開く → 4. 「詳細」ボタンを押す（勤怠詳細ページを開く想定）
         $response = $this->getJsonAsUser('/api/attendance/detail/' . $attendance->id);

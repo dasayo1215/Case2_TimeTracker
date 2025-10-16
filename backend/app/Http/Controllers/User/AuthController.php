@@ -7,7 +7,6 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Illuminate\Support\Facades\Auth;
-use App\Actions\Fortify\CreateNewUser;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -69,9 +68,9 @@ class AuthController extends Controller
             return $this->loginFailedResponse();
         }
 
-        // ★ メール未認証ならメールを再送して案内
+        // メール未認証ならメールを再送して案内
         if (!$user->hasVerifiedEmail()) {
-            // セッションは破棄しておく
+            // セッションは破棄
             Auth::logout();
 
             // 再送

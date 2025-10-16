@@ -9,6 +9,10 @@ start: stop
 
 	@echo "Starting backend containers (docker-compose up -d)..."
 	docker-compose up -d
+
+	@echo "Generating new Laravel APP_KEY (inside container)..."
+	docker-compose exec -T php php artisan key:generate
+
 	@echo "Killing any process on port 5173..."
 	@lsof -t -i:5173 | xargs -r kill -9 || true
 	@echo "Starting frontend (npm run dev on port 5173)..."
@@ -32,6 +36,9 @@ preview:
 
 	@echo "Ensuring MySQL docker is up..."
 	docker-compose up -d mysql
+
+	@echo "Generating new Laravel APP_KEY (inside container)..."
+	docker-compose exec -T php php artisan key:generate
 
 	@echo "Clearing Laravel caches (host)..."
 	cd backend && php artisan optimize:clear || true

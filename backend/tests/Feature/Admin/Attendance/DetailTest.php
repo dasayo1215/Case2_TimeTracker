@@ -71,7 +71,7 @@ class DetailTest extends AdminTestCase
 
         // 2,4. 勤怠詳細ページで保存処理をする
         $response = $this->actingAs($this->admin, 'admin')
-            ->postJson('/api/admin/attendance/update-or-create/' . $attendance->id, $payload);
+            ->postJson('/api/admin/attendance/update-or-create/', $payload);
         $response->assertStatus(422);
 
         // バリデーションメッセージ確認
@@ -113,7 +113,7 @@ class DetailTest extends AdminTestCase
 
         // 2,4. 勤怠詳細ページで保存処理をする
         $response = $this->actingAs($this->admin, 'admin')
-            ->postJson('/api/admin/attendance/update-or-create/' . $attendance->id, $payload);
+            ->postJson('/api/admin/attendance/update-or-create/', $payload);
         $response->assertStatus(422);
 
         // バリデーションメッセージ確認
@@ -155,7 +155,7 @@ class DetailTest extends AdminTestCase
 
         // 2,4. 勤怠詳細ページで保存処理をする
         $response = $this->actingAs($this->admin, 'admin')
-            ->postJson('/api/admin/attendance/update-or-create/' . $attendance->id, $payload);
+            ->postJson('/api/admin/attendance/update-or-create/', $payload);
         $response->assertStatus(422);
 
         // バリデーションメッセージ確認
@@ -193,7 +193,7 @@ class DetailTest extends AdminTestCase
 
         // 2,4. 勤怠詳細ページで保存処理をする
         $response = $this->actingAs($this->admin, 'admin')
-            ->postJson('/api/admin/attendance/update-or-create/' . $attendance->id, $payload);
+            ->postJson('/api/admin/attendance/update-or-create/', $payload);
         $response->assertStatus(422);
 
         // バリデーションメッセージ確認

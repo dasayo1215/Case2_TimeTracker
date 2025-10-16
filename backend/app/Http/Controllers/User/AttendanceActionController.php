@@ -55,7 +55,7 @@ class AttendanceActionController extends Controller
         ]);
     }
 
-    public function updateOrCreate(AttendanceRequest $request, $id)
+    public function updateOrCreate(AttendanceRequest $request)
     {
         $user = Auth::user();
         $validated = $request->validated();

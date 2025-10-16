@@ -32,7 +32,7 @@ class CorrectionValidationTest extends UserTestCase
         ];
 
         // 4. 保存処理をする
-        $response = $this->postJsonAsUser('/api/attendance/update-or-create/' . $attendance->id, $payload);
+        $response = $this->postJsonAsUser('/api/attendance/update-or-create/', $payload);
         $response->assertStatus(422);
 
         // 「出勤時間が不適切な値です」というバリデーションメッセージが表示される
@@ -71,7 +71,7 @@ class CorrectionValidationTest extends UserTestCase
         ];
 
         // 4. 保存処理をする
-        $response = $this->postJsonAsUser('/api/attendance/update-or-create/' . $attendance->id, $payload);
+        $response = $this->postJsonAsUser('/api/attendance/update-or-create/', $payload);
         $response->assertStatus(422);
 
         // 「休憩時間が不適切な値です」というバリデーションメッセージが表示される
@@ -110,7 +110,7 @@ class CorrectionValidationTest extends UserTestCase
         ];
 
         // 4. 保存処理をする
-        $response = $this->postJsonAsUser('/api/attendance/update-or-create/' . $attendance->id, $payload);
+        $response = $this->postJsonAsUser('/api/attendance/update-or-create/', $payload);
         $response->assertStatus(422);
 
         // 「休憩時間もしくは退勤時間が不適切な値です」というバリデーションメッセージが表示される
@@ -145,7 +145,7 @@ class CorrectionValidationTest extends UserTestCase
         ];
 
         // 4. 保存処理をする
-        $response = $this->postJsonAsUser('/api/attendance/update-or-create/' . $attendance->id, $payload);
+        $response = $this->postJsonAsUser('/api/attendance/update-or-create/', $payload);
         $response->assertStatus(422);
 
         // 「備考を記入してください」というバリデーションメッセージが表示される

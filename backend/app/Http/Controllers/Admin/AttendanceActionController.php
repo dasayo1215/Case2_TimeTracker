@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Attendance;
-use App\Models\BreakTime;
 use App\Http\Requests\AttendanceRequest;
 
 class AttendanceActionController extends Controller
 {
-    public function updateOrCreate(AttendanceRequest $request, $id)
+    public function updateOrCreate(AttendanceRequest $request)
     {
         $validated = $request->validated();
 
@@ -64,10 +62,11 @@ class AttendanceActionController extends Controller
         $attendance = Attendance::findOrFail($id);
         $attendance->update([
             'status' => 'approved',
+            'submitted_at' => $attendance->submitted_at ?? now(),
             'approved_at' => now(),
         ]);
 
-        return response()->json(['message' => 'Approved successfully']);
+        return response()->json(['message' => '承認が完了しました']);
     }
 }
 

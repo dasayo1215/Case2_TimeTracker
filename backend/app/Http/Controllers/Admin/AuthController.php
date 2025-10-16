@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\LoginRequest;
 
@@ -13,14 +12,12 @@ class AuthController extends Controller
     {
         $credentials = $request->validated();
 
-        // 管理者用 guard で認証
         if (!Auth::guard('admin')->attempt($credentials)) {
             return $this->loginFailedResponse();
         }
 
         $user = Auth::guard('admin')->user();
 
-        // roleがadmin以外ならログアウト
         if ($user->role !== 'admin') {
             Auth::guard('admin')->logout();
             return $this->loginFailedResponse();

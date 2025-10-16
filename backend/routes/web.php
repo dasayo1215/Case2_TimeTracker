@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\Admin\AttendanceActionController as AdminAttendanceActionController;
 use App\Http\Controllers\Admin\StaffController as AdminStaffController;
+use App\Http\Controllers\Admin\AttendanceExportController as AttendanceExportController;
 
 // 一般ユーザー認証系
 Route::post('/api/register', [UserAuthController::class, 'register']);
@@ -24,7 +25,7 @@ Route::post('/api/logout', [UserAuthController::class, 'logout']);
 
 // メール認証関連
 Route::middleware(['web'])->group(function () {
-    // SPA構成では直接呼ばれないが、Laravel内部のメール認証リダイレクト対策で残す
+    // Laravel内部のメール認証リダイレクト対策（SPA構成では直接呼ばれない）
     Route::get('/api/email/verify', [EmailVerificationController::class, 'showNotice'])
         ->name('verification.notice');
     Route::post('/api/email/verification-notification', [EmailVerificationController::class, 'resendVerificationEmail'])
@@ -74,7 +75,7 @@ Route::middleware(['web', 'auth:web', 'verified'])->group(function () {
 
     // ---- 打刻・修正など操作系 ----
     Route::post('/api/attendance/clock', [UserAttendanceActionController::class, 'clock']);
-    Route::post('/api/attendance/update-or-create/{id}', [UserAttendanceActionController::class, 'updateOrCreate'])
+    Route::post('/api/attendance/update-or-create', [UserAttendanceActionController::class, 'updateOrCreate'])
         ->whereNumber('id');
 });
 
@@ -90,20 +91,22 @@ Route::prefix('api/admin')
         ->whereNumber('id');
     Route::get('/attendance/{id}', [AdminAttendanceController::class, 'getDetail'])
         ->whereNumber('id');
-    Route::get('/attendance/staff/{id}/export', [AdminAttendanceController::class, 'exportCsv'])
-        ->whereNumber('id');
 
     // ---- 操作系 ----
-    Route::post('/attendance/update-or-create/{id}', [AdminAttendanceActionController::class, 'updateOrCreate'])
+    Route::post('/attendance/update-or-create', [AdminAttendanceActionController::class, 'updateOrCreate'])
         ->whereNumber('id');
     Route::post('/attendance/approve/{id}', [AdminAttendanceActionController::class, 'approve'])
         ->whereNumber('id');
 
     // ---- スタッフ関連 ----
     Route::get('/staff/list', [AdminStaffController::class, 'getList']);
+
+    // ---- エクセルエクスポート ----
+    Route::get('/attendance/staff/{id}/export', [AttendanceExportController::class, 'exportCsv'])
+        ->whereNumber('id');
 });
 
 // React SPA 用ルート
-// Route::get('/{any}', function () {
-//     return file_get_contents(public_path('index.html'));
-// })->where('any', '.*');
+Route::get('/{any}', function () {
+    return file_get_contents(public_path('index.html'));
+})->where('any', '.*');

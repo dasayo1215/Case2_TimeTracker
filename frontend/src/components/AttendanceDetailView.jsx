@@ -121,7 +121,7 @@ export default function AttendanceDetailView({ id, apiBase, mode = 'normal' }) {
 					})),
 			};
 
-			const url = `${apiBase}/attendance/update-or-create/${id}`;
+			const url = `${apiBase}/attendance/update-or-create`;
 
 			await axios.post(url, payload);
 

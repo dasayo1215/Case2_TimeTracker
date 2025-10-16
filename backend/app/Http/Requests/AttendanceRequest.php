@@ -56,11 +56,7 @@ class AttendanceRequest extends FormRequest
             $breaks   = $this->input('breakTimes', []);
 
             // --- メッセージを一時的に集約 ---
-            $messages = [
-                'clock_in'   => [],
-                'breakTimes' => [],
-                'remarks'    => [],
-            ];
+            $messages = [];
 
             // --- 1. 出勤時間 > 退勤時間（ゼロはOKにする） ---
             if ($clockIn && $clockOut && strtotime($clockIn) > strtotime($clockOut)) {
@@ -113,11 +109,6 @@ class AttendanceRequest extends FormRequest
                         $messages['breakTimes'][] = '休憩時間が重複しています';
                     }
                 }
-            }
-
-            // --- 6. 備考未入力 ---
-            if (!$this->filled('remarks')) {
-                $messages['remarks'][] = '備考を記入してください';
             }
 
             // --- 最後に重複メッセージを1つずつ登録 ---
