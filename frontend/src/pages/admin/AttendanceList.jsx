@@ -13,7 +13,7 @@ export default function AdminAttendanceList() {
 	const [selectedDate, setSelectedDate] = useState(null);
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	// 初期化：クエリがあれば採用、なければ今日の日付をセット（→後でクエリにも反映される）
+	// 初期化：クエリがあれば採用、なければ今日の日付をセット（→後でクエリにも反映）
 	useEffect(() => {
 		const queryDate = searchParams.get('date');
 		if (queryDate) {
@@ -48,7 +48,9 @@ export default function AdminAttendanceList() {
 		const newDateStr = selectedDate.toISOString().slice(0, 10);
 		const currentQuery = searchParams.get('date');
 		if (currentQuery !== newDateStr) {
-			setSearchParams({ date: newDateStr });
+			// 初回（クエリがまだないとき）だけ replace、それ以外は push
+			const isInitial = !searchParams.get('date');
+			setSearchParams({ date: newDateStr }, { replace: isInitial });
 		}
 	}, [selectedDate]);
 

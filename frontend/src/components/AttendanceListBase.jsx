@@ -15,7 +15,7 @@ export default function AttendanceListBase({
 	showCsv = false,
 }) {
 	const [records, setRecords] = useState([]);
-	const [month, setMonth] = useState(null); // ← 初期は null（指定なし）
+	const [month, setMonth] = useState(null); // ← 初期は null
 	const [loading, setLoading] = useState(true);
 
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -37,7 +37,12 @@ export default function AttendanceListBase({
 		if (!month) return;
 		const queryMonth = searchParams.get('month')?.replace('-', '/');
 		if (queryMonth !== month) {
-			setSearchParams({ month: month.replace('/', '-') });
+			// 初回（クエリがまだ無いとき）だけ replace、それ以外は push
+			const isInitial = !searchParams.get('month');
+			setSearchParams(
+				{ month: month.replace('/', '-') },
+				{ replace: isInitial }
+			);
 		}
 	}, [month]);
 
