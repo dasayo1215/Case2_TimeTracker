@@ -6,6 +6,14 @@ echo "Starting environment setup..."
 # コンテナ起動
 docker-compose up -d
 
+# ✅ MySQL 起動待機（healthcheckで確実に）
+echo "Waiting for MySQL to be healthy..."
+until [ "$(docker inspect -f '{{.State.Health.Status}}' mysql 2>/dev/null)" = "healthy" ]; do
+    echo "⏳ MySQL is starting up..."
+    sleep 3
+done
+echo "✅ MySQL is ready!"
+
 # Laravel 初期セットアップ
 echo "Installing backend dependencies..."
 docker-compose exec php bash -c "
