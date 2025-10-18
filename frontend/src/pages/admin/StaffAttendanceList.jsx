@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
-import AttendanceListBase from '../../components/AttendanceListBase';
+import AttendanceListBase from "../../components/attendance/list/AttendanceListBase";
 
 export default function StaffAttendanceList() {
 	const { id } = useParams();

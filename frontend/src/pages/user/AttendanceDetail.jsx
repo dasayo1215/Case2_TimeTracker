@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
-import AttendanceDetailView from '../../components/AttendanceDetailView';
+import DetailView from "../../components/attendance/detail/View";
 
 export default function AttendanceDetail() {
 	const { id } = useParams();
-	return <AttendanceDetailView id={id} apiBase="/api" mode="user" />;
+	return <DetailView id={id} apiBase="/api" mode="user" />;
 }

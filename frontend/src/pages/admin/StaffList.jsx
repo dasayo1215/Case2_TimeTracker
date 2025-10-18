@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from '../../axios';
 import { Link } from 'react-router-dom';
-import 'react-datepicker/dist/react-datepicker.css';
 import '../../css/list-page.css';
 
 export default function AdminAttendanceList() {
@@ -46,7 +45,7 @@ export default function AdminAttendanceList() {
 						<tbody>
 							{records.length === 0 ? (
 								<tr>
-									<td colSpan="6" className="list-cell">
+									<td colSpan="3" className="list-cell">
 										データがありません
 									</td>
 								</tr>

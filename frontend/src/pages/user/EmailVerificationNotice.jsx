@@ -46,9 +46,9 @@ export default function EmailVerificationNotice() {
 				認証はこちらから
 			</a>
 
-			<a href="#" onClick={handleResend} className="resend-link">
+			<button onClick={handleResend} className="resend-link">
 				認証メールを再送する
-			</a>
+			</button>
 		</div>
 	);
 }
