@@ -32,6 +32,12 @@ services:
         volumes:
             - mysql_data:/var/lib/mysql
             - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            interval: 5s
+            timeout: 3s
+            retries: 20
+            start_period: 10s
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
