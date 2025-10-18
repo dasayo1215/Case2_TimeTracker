@@ -82,7 +82,6 @@
 	align-items: center;
 }
 
-/* テキストエリア内にも上下のゆとり */
 .detail-textarea {
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -102,7 +101,6 @@
     box-sizing: border-box;
 }
 
-/* フォーカス時のハイライト */
 .detail-input:focus {
 	border-color: #555;
 }
@@ -110,9 +108,9 @@
 /* ====== type="time" 専用のUI無効化 ====== */
 .detail-input[type="time"]::-webkit-calendar-picker-indicator {
 	display: none;
-	appearance: none;           /* 標準プロパティ */
-	-webkit-appearance: none;   /* Chrome / Safari */
-	-moz-appearance: none;      /* Firefox */
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
 }
 
 .detail-input[type="time"] {

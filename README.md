@@ -34,7 +34,7 @@ make setup
 - ※もしmakeがない環境なら sh setup.sh で代用可能です。
 - ※MySQLは、OSによって起動しない場合があるのでそれぞれのPCに合わせてdocker-compose.ymlファイルを編集してください。
 
-## データベース初期化とシーディング
+## データベース初期化とシーディング、ログイン情報
 初回セットアップ時に `make setup` または `sh setup.sh` を実行すると、自動的にマイグレーションとシーディングが実行されます。
 
 - 管理者ユーザー
@@ -116,6 +116,7 @@ mysql -u root -p
 CREATE DATABASE demo_test;
 SHOW DATABASES;
 ```
+※パスワードは docker-compose.yml 内の MYSQL_ROOT_PASSWORD に記載されています。
 
 #### 2. APP_KEY の生成
 ```

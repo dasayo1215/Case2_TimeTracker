@@ -42,7 +42,7 @@
 .attendance-btn-group {
     display: flex;
     justify-content: center;
-    gap: 50px; /* ← ボタンの間にスペースを追加！ */
+    gap: 50px;
 }
 
 /* 出勤・退勤・休憩ボタン */

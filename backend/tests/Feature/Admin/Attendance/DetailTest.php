@@ -15,7 +15,6 @@ class DetailTest extends AdminTestCase
         // 1. 管理者ユーザーにログインをする（AdminTestCaseでログイン済）
         $this->assertAuthenticatedAs($this->admin, 'admin');
 
-        // 操作対象の一般ユーザー・勤怠データを作成
         $targetUser = User::factory()->create(['name' => 'テスト太郎', 'role' => 'user']);
         $attendance = Attendance::factory()->create([
             'user_id'      => $targetUser->id,
@@ -33,7 +32,6 @@ class DetailTest extends AdminTestCase
             ->getJson('/api/admin/attendance/' . $attendance->id);
         $response->assertStatus(200);
 
-        // 詳細画面の内容が選択した情報と一致する
         $data = $response->json();
         $this->assertEquals('テスト太郎', $data['user_name']);
         $this->assertEquals($targetUser->id, $data['user_id']);
@@ -50,7 +48,6 @@ class DetailTest extends AdminTestCase
         // 1. 管理者ユーザーにログインをする（AdminTestCaseでログイン済）
         $this->assertAuthenticatedAs($this->admin, 'admin');
 
-        // 操作対象の一般ユーザー・勤怠データを作成
         $targetUser = User::factory()->create(['role' => 'user']);
         $attendance = Attendance::factory()->create([
             'user_id'      => $targetUser->id,
@@ -74,7 +71,6 @@ class DetailTest extends AdminTestCase
             ->postJson('/api/admin/attendance/update-or-create/', $payload);
         $response->assertStatus(422);
 
-        // バリデーションメッセージ確認
         $response->assertJsonValidationErrors(['clock_in']);
         $this->assertStringContainsString(
             '出勤時間もしくは退勤時間が不適切な値です',
@@ -88,7 +84,6 @@ class DetailTest extends AdminTestCase
         // 1. 管理者ユーザーにログインをする（AdminTestCaseでログイン済）
         $this->assertAuthenticatedAs($this->admin, 'admin');
 
-        // 操作対象の一般ユーザー・勤怠データを作成
         $targetUser = User::factory()->create(['role' => 'user']);
         $attendance = Attendance::factory()->create([
             'user_id'      => $targetUser->id,
@@ -116,7 +111,6 @@ class DetailTest extends AdminTestCase
             ->postJson('/api/admin/attendance/update-or-create/', $payload);
         $response->assertStatus(422);
 
-        // バリデーションメッセージ確認
         $response->assertJsonValidationErrors(['breakTimes']);
         $this->assertStringContainsString(
             '休憩時間が不適切な値です',
@@ -130,7 +124,6 @@ class DetailTest extends AdminTestCase
         // 1. 管理者ユーザーにログインをする（AdminTestCaseでログイン済）
         $this->assertAuthenticatedAs($this->admin, 'admin');
 
-        // 操作対象の一般ユーザー・勤怠データを作成
         $targetUser = User::factory()->create(['role' => 'user']);
         $attendance = Attendance::factory()->create([
             'user_id'      => $targetUser->id,
@@ -158,7 +151,6 @@ class DetailTest extends AdminTestCase
             ->postJson('/api/admin/attendance/update-or-create/', $payload);
         $response->assertStatus(422);
 
-        // バリデーションメッセージ確認
         $response->assertJsonValidationErrors(['breakTimes']);
         $this->assertStringContainsString(
             '休憩時間もしくは退勤時間が不適切な値です',
@@ -172,7 +164,6 @@ class DetailTest extends AdminTestCase
         // 1. 管理者ユーザーにログインをする（AdminTestCaseでログイン済）
         $this->assertAuthenticatedAs($this->admin, 'admin');
 
-        // 操作対象の一般ユーザー・勤怠データを作成
         $targetUser = User::factory()->create(['role' => 'user']);
         $attendance = Attendance::factory()->create([
             'user_id'      => $targetUser->id,
@@ -196,7 +187,6 @@ class DetailTest extends AdminTestCase
             ->postJson('/api/admin/attendance/update-or-create/', $payload);
         $response->assertStatus(422);
 
-        // バリデーションメッセージ確認
         $response->assertJsonValidationErrors(['remarks']);
         $this->assertStringContainsString(
             '備考を記入してください',
