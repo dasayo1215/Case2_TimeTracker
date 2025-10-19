@@ -24,17 +24,13 @@ return new class extends Migration {
             $table->unique(['user_id', 'work_date']);
         });
 
-        // 状態ごとの整合性チェック (raw SQL)
-        // normal  : submitted_at, approved_at は両方 NULL
-        // pending : submitted_at のみ必須、approved_at は NULL、remarks必須
-        // approved: submitted_at & approved_at 両方必須、remarks必須
         DB::statement("
             ALTER TABLE attendances
             ADD CONSTRAINT chk_attendances_status
             CHECK (
-                (status = 'normal'   AND submitted_at IS NULL     AND approved_at IS NULL     AND remarks IS NULL)
-            OR (status = 'pending'  AND submitted_at IS NOT NULL AND approved_at IS NULL     AND remarks IS NOT NULL)
-            OR (status = 'approved' AND submitted_at IS NOT NULL AND approved_at IS NOT NULL AND remarks IS NOT NULL)
+                (status = 'normal'   AND submitted_at IS NULL AND approved_at IS NULL)
+                OR (status = 'pending'  AND submitted_at IS NOT NULL AND remarks IS NOT NULL)
+                OR (status = 'approved' AND submitted_at IS NOT NULL AND approved_at IS NOT NULL AND remarks IS NOT NULL)
             )
         ");
     }
