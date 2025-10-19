@@ -1,3 +1,4 @@
+# ===== MySQL Data =====
 docker/mysql/data/*
 !.gitkeep
 .npm_dev.pid
@@ -5,16 +6,22 @@ docker/mysql/data/*
 # ===== Laravel =====
 /backend/vendor/
 /backend/node_modules/
-/backend/storage/*
-!/backend/storage/.gitignore
-!/backend/storage/framework/
-!/backend/storage/framework/cache/.gitignore
-!/backend/storage/framework/views/.gitignore
-!/backend/storage/framework/sessions/.gitignore
+
+/backend/storage/app/*
+!/backend/storage/app/.gitignore
+
 /backend/storage/framework/cache/*
+!/backend/storage/framework/cache/.gitignore
+
 /backend/storage/framework/views/*
+!/backend/storage/framework/views/.gitignore
+
 /backend/storage/framework/sessions/*
+!/backend/storage/framework/sessions/.gitignore
+
 /backend/storage/logs/*
+!/backend/storage/logs/.gitignore
+
 /backend/.env
 /backend/.env.testing
 /backend/.env.preview
@@ -24,7 +31,6 @@ docker/mysql/data/*
 /frontend/dist/
 /frontend/.env
 
-# ===== Docker / Local Dev =====
+# ===== Docker =====
 docker/mysql/data/*
 !.gitkeep
-.npm_dev.pid
