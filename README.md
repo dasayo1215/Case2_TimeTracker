@@ -29,10 +29,15 @@ coachtech 勤怠管理アプリ
 ```
 git clone https://github.com/dasayo1215/Case2_TimeTracker.git
 cd Case2_TimeTracker
-make setup
+make setup     # 初回セットアップ（依存関係インストール・DB初期化）
+make start     # コンテナ起動＋フロントエンド開発サーバー起動
 ```
-- ※もしmakeがない環境なら sh setup.sh で代用可能です。
-- ※MySQLは、OSによって起動しない場合があるのでそれぞれのPCに合わせてdocker-compose.ymlファイルを編集してください。
+- もしmakeがない環境なら sh setup.sh で代用可能です。
+- MySQLは、OSによって起動しない場合があるのでそれぞれのPCに合わせてdocker-compose.ymlファイルを編集してください。
+- 開発を終了する際は以下を実行してください。これにより、バックエンドコンテナとフロントエンド開発サーバーが両方停止します。
+```
+make stop
+```
 
 ## データベース初期化とシーディング、ログイン情報
 初回セットアップ時に `make setup` または `sh setup.sh` を実行すると、自動的にマイグレーションとシーディングが実行されます。
