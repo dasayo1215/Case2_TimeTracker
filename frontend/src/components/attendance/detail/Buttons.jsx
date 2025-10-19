@@ -14,8 +14,7 @@ export default function Buttons({
             {/* === ボタンエリア === */}
             {(mode === "user" || mode === "admin") && (
                 <>
-                    {(mode === "admin" ||
-                        ["normal", "approved"].includes(record.status)) && (
+                    {["normal", "approved"].includes(record.status) && (
                         <div className="detail-btn-box">
                             <button
                                 type="button"
@@ -28,7 +27,8 @@ export default function Buttons({
                         </div>
                     )}
 
-                    {mode === "user" && record.status === "pending" && (
+                    {/* pending のときは共通で修正不可メッセージを表示 */}
+                    {record.status === "pending" && (
                         <p className="detail-pending-msg">
                             ＊承認待ちのため修正はできません。
                         </p>

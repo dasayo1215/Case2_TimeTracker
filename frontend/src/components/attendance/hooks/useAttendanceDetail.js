@@ -23,18 +23,22 @@ function normalizeRecord(data, loginUser, id) {
 }
 
 function buildPayload(record) {
+    const breaks = Array.isArray(record.breakTimes)
+        ? record.breakTimes
+            .filter((b) => b.break_start || b.break_end)
+            .map((b) => ({
+                break_start: addSeconds(b.break_start),
+                break_end: addSeconds(b.break_end),
+            }))
+        : [];
+
     return {
         user_id: record.user_id,
         date: record.date,
         clock_in: addSeconds(record.clock_in),
         clock_out: addSeconds(record.clock_out),
         remarks: record.remarks || "",
-        breakTimes: (record.breakTimes ?? [])
-            .filter((b) => b.break_start || b.break_end)
-            .map((b) => ({
-                break_start: addSeconds(b.break_start),
-                break_end: addSeconds(b.break_end),
-            })),
+        breakTimes: breaks,
     };
 }
 

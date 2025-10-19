@@ -111,6 +111,17 @@ class AttendanceRequest extends FormRequest
                 }
             }
 
+            // --- 6. 休憩開始だけ or 終了だけ入力された場合を禁止 ---
+            foreach ($breaks as $b) {
+                $hasStart = !empty($b['break_start']);
+                $hasEnd   = !empty($b['break_end']);
+
+                // どちらか片方だけ入力されている場合
+                if ($hasStart xor $hasEnd) {
+                    $messages['breakTimes'][] = '休憩開始と終了は両方入力してください';
+                }
+            }
+
             // --- 最後に重複メッセージを1つずつ登録 ---
             foreach ($messages as $field => $msgs) {
                 foreach (array_unique($msgs) as $msg) {

@@ -57,12 +57,19 @@ class DevSeeder extends Seeder
             }
 
             // 出勤記録を作成
-            $attendance = Attendance::factory()->create([
+            $attendanceData = Attendance::factory()->make([
                 'user_id'   => $user->id,
                 'work_date' => $date->format('Y-m-d'),
                 'clock_in'  => fake()->dateTimeBetween($date->format('Y-m-d').' 08:00:00', $date->format('Y-m-d').' 10:00:00'),
                 'clock_out' => fake()->dateTimeBetween($date->format('Y-m-d').' 17:00:00', $date->format('Y-m-d').' 20:00:00'),
-            ]);
+            ])->toArray();
+
+            // submitted_at は work_date の翌日に固定（pending/approved の場合のみ）
+            if (in_array($attendanceData['status'], ['pending', 'approved'])) {
+                $attendanceData['submitted_at'] = (clone $date)->addDay()->setTime(rand(9, 18), rand(0, 59));
+            }
+
+            $attendance = Attendance::create($attendanceData);
 
             $workStart = $attendance->clock_in;
             $workEnd   = $attendance->clock_out;

@@ -5,7 +5,8 @@ export default function BreakRows({ record, mode, handleBreakChange }) {
     ];
 
     const isReadOnlyMode =
-        (mode === "user" && record.status === "pending") || mode === "approval";
+        ((mode === "user" || mode === "admin") && record.status === "pending") ||
+        mode === "approval";
 
     const renderReadOnlyRow = (b, isLastEmpty) => (
         <div className="time-grid">

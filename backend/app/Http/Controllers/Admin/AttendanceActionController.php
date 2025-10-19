@@ -30,14 +30,19 @@ class AttendanceActionController extends Controller
             ], 404);
         }
 
-        // 管理者は normal / pending / approved すべて修正可能
+        // pending の勤怠は承認待ちのため修正不可
+        if ($attendance->status === 'pending') {
+            return response()->json([
+                'message' => '承認待ちの勤怠は修正できません',
+            ], 422);
+        }
+
+        // 修正可能（normal / approved のみ）
         $attendance->update([
-            'clock_in'     => $clockIn,
-            'clock_out'    => $clockOut,
-            'remarks'      => $remarks,
-            'status'       => 'approved',   // 修正後はapprovedに統一
-            'submitted_at' => now(),
-            'approved_at'  => now(),
+            'clock_in'  => $clockIn,
+            'clock_out' => $clockOut,
+            'remarks'   => $remarks,
+            // status, submitted_at, approved_at は変更しない
         ]);
 
         // 休憩時間を再登録

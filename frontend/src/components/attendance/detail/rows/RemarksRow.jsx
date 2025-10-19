@@ -1,6 +1,7 @@
 export default function RemarksRow({ record, mode, handleChange }) {
     const isReadOnly =
-        (mode === "user" && record.status === "pending") || mode === "approval";
+        ((mode === "user" || mode === "admin") && record.status === "pending") ||
+        mode === "approval";
 
     return (
         <tr className="detail-row">
