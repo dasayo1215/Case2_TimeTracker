@@ -1,3 +1,30 @@
 docker/mysql/data/*
 !.gitkeep
 .npm_dev.pid
+
+# ===== Laravel =====
+/backend/vendor/
+/backend/node_modules/
+/backend/storage/*
+!/backend/storage/.gitignore
+!/backend/storage/framework/
+!/backend/storage/framework/cache/.gitignore
+!/backend/storage/framework/views/.gitignore
+!/backend/storage/framework/sessions/.gitignore
+/backend/storage/framework/cache/*
+/backend/storage/framework/views/*
+/backend/storage/framework/sessions/*
+/backend/storage/logs/*
+/backend/.env
+/backend/.env.testing
+/backend/.env.preview
+
+# ===== Frontend =====
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.env
+
+# ===== Docker / Local Dev =====
+docker/mysql/data/*
+!.gitkeep
+.npm_dev.pid
