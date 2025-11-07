@@ -2,7 +2,7 @@ README
 
 # アプリケーション名
 
-coachtech 勤怠管理アプリ
+勤怠管理アプリ（coachtech課題）
 
 
 ## 使用技術（実行環境）
